@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
+
+// Import authentication-related components
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import Navbar from "./components/Navbar";
+
+// Import user profile and stats components
+import UserProfilePage from "./pages/UserProfilePage";
+import AddWeightPage from "./pages/AddWeightPage";
+import EditUserProfilePage from "./pages/EditUserProfilePage";
+import DailyStatsPage from "./pages/DailyStatsPage";
+import WeeklyStatsPage from "./pages/WeeklyStatsPage";
+
+// Import food-related components
+import FoodItemsPage from "./pages/FoodItemsPage";
+import AddFoodItemPage from "./pages/AddFoodItemPage";
+import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
+import EditFoodItemPage from "./pages/EditFoodItemPage";
+
+// Import review-related components
+import AddReviewPage from "./pages/AddReviewPage";
+import MyReviewsPage from "./pages/MyReviewsPage";
+import ReviewDetailsPage from "./pages/ReviewDetailsPage";
+import EditReviewPage from "./pages/EditReviewPage";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        {/* Authentication-related routes */}
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* User profile and stats routes */}
+        <Route path="/user-profile" element={<UserProfilePage />} />
+        <Route path="/add-weight" element={<AddWeightPage />} />
+        <Route path="/edit-profile" element={<EditUserProfilePage />} />
+        <Route path="/daily-stats" element={<DailyStatsPage />} />
+        <Route path="/weekly-stats" element={<WeeklyStatsPage />} />
+
+        {/* Food-related routes */}
+        <Route path="/foods" element={<FoodItemsPage />} />
+        <Route path="/add-food" element={<AddFoodItemPage />} />
+        <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
+        <Route path="/edit-food/:id" element={<EditFoodItemPage />} />
+
+        {/* Review-related routes */}
+        <Route path="/reviews" element={<MyReviewsPage />} />
+        <Route path="/add-review" element={<AddReviewPage />} />
+        <Route path="/reviews/:id" element={<ReviewDetailsPage />} />
+        <Route path="/edit-review/:id" element={<EditReviewPage />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
