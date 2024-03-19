@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 function EditUserProfilePage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
+    currentWeight: 0,
+    weightGoal: 0,
     dailyCalorieGoal: 0,
     dailyProteinGoal: 0,
     dailyCarbGoal: 0,
@@ -57,7 +59,15 @@ function EditUserProfilePage() {
           <input type="email" name="email" value={formData.email} onChange={handleChange} required />
         </div>
         <div>
-          <label>Daily Calorie Goal:</label>
+          <label>Current Weight (kg):</label>
+          <input type="number" name="currentWeight" value={formData.currentWeight} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Weight Goal (kg):</label>
+          <input type="number" name="weightGoal" value={formData.weightGoal} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Daily Calorie Goal (kcal):</label>
           <input type="number" name="dailyCalorieGoal" value={formData.dailyCalorieGoal} onChange={handleChange} required />
         </div>
         <div>

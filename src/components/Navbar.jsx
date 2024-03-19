@@ -25,6 +25,34 @@ function Navbar() {
           >
             User Profile
           </NavLink>
+
+          <NavLink
+            to="/daily-stats"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Daily Stats
+          </NavLink>
+
+          <NavLink
+            to="/add-food"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Add Food
+          </NavLink>
+
+          <NavLink
+            to="/foods"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Foods
+          </NavLink>
+
           <button onClick={logOutUser} className="nav-link">
             Logout
           </button>

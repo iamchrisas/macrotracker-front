@@ -6,12 +6,12 @@ function UserProfilePage() {
   const [userProfile, setUserProfile] = useState({
     name: "",
     email: "",
-    username: "",
+    currentWeight: 0,
+    weightGoal: 0,
     dailyCalorieGoal: 0,
     dailyProteinGoal: 0,
     dailyCarbGoal: 0,
     dailyFatGoal: 0,
-    weight: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -38,12 +38,12 @@ function UserProfilePage() {
       <h2>User Profile</h2>
       <p>Name: {userProfile.name}</p>
       <p>Email: {userProfile.email}</p>
-      <p>Username: {userProfile.username}</p>
-      <p>Daily Calorie Goal: {userProfile.dailyCalorieGoal}</p>
+      <p>Current Weight: {userProfile.currentWeight} kg</p>
+      <p>Weight Goal: {userProfile.weightGoal} kg</p>
+      <p>Daily Calorie Goal: {userProfile.dailyCalorieGoal} kcal</p>
       <p>Daily Protein Goal: {userProfile.dailyProteinGoal}g</p>
       <p>Daily Carb Goal: {userProfile.dailyCarbGoal}g</p>
       <p>Daily Fat Goal: {userProfile.dailyFatGoal}g</p>
-      <p>Weight: {userProfile.weight} kg</p>
       <Link to="/edit-profile">Edit Profile</Link>
     </div>
   );

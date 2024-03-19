@@ -22,12 +22,6 @@ class UserService {
     return this.api.get("/api/users/user-profile");
   }
 
-  // Method to add a new weight entry for the user
-  addWeight(weightData) {
-    return this.api.post("/api/users/add-weight", weightData);
-  }
-
-
   // Method to update user profile
      editUserProfile(userData) {
       return this.api.put("/api/users/edit-profile", userData);

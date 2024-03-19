@@ -10,10 +10,8 @@ import Navbar from "./components/Navbar";
 
 // Import user profile and stats components
 import UserProfilePage from "./pages/UserProfilePage";
-import AddWeightPage from "./pages/AddWeightPage";
 import EditUserProfilePage from "./pages/EditUserProfilePage";
 import DailyStatsPage from "./pages/DailyStatsPage";
-import WeeklyStatsPage from "./pages/WeeklyStatsPage";
 
 // Import food-related components
 import FoodItemsPage from "./pages/FoodItemsPage";
@@ -39,10 +37,8 @@ function App() {
 
         {/* User profile and stats routes */}
         <Route path="/user-profile" element={<UserProfilePage />} />
-        <Route path="/add-weight" element={<AddWeightPage />} />
         <Route path="/edit-profile" element={<EditUserProfilePage />} />
         <Route path="/daily-stats" element={<DailyStatsPage />} />
-        <Route path="/weekly-stats" element={<WeeklyStatsPage />} />
 
         {/* Food-related routes */}
         <Route path="/foods" element={<FoodItemsPage />} />
