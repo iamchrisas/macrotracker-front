@@ -9,24 +9,25 @@ function EditReviewPage() {
     food: "",
     taste: "",
     digestion: "",
-    rate: 1
+    rate: 1,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    reviewService.getReviewById(id)
-      .then(response => {
+    reviewService
+      .getReviewById(id)
+      .then((response) => {
         // Ensure you only set fields that exist in your model
         setReviewData({
           food: response.data.food,
           taste: response.data.taste,
           digestion: response.data.digestion,
-          rate: response.data.rate
+          rate: response.data.rate,
         });
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setError("Failed to fetch review");
         setLoading(false);
       });
@@ -34,19 +35,20 @@ function EditReviewPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setReviewData(prevState => ({
+    setReviewData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    reviewService.updateReview(id, reviewData)
+    reviewService
+      .updateReview(id, reviewData)
       .then(() => {
         navigate("/reviews");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Failed to update review", error);
         setError("Failed to update review. Please try again.");
       });
@@ -61,11 +63,22 @@ function EditReviewPage() {
       {/* Form fields for review data */}
       <div>
         <label>Food ID:</label>
-        <input type="text" name="food" value={reviewData.food} onChange={handleChange} required />
+        <input
+          type="text"
+          name="food"
+          value={reviewData.food}
+          onChange={handleChange}
+          required
+        />
       </div>
       <div>
         <label>Taste:</label>
-        <select name="taste" value={reviewData.taste} onChange={handleChange} required>
+        <select
+          name="taste"
+          value={reviewData.taste}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select</option>
           <option value="bad">Bad</option>
           <option value="ok">Ok</option>
@@ -74,7 +87,12 @@ function EditReviewPage() {
       </div>
       <div>
         <label>Digestion:</label>
-        <select name="digestion" value={reviewData.digestion} onChange={handleChange} required>
+        <select
+          name="digestion"
+          value={reviewData.digestion}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select</option>
           <option value="bad">Bad</option>
           <option value="ok">Ok</option>
@@ -83,9 +101,15 @@ function EditReviewPage() {
       </div>
       <div>
         <label>Rate (1-5):</label>
-        <input type="number" name="rate" value={reviewData.rate} onChange={handleChange} required />
+        <input
+          type="number"
+          name="rate"
+          value={reviewData.rate}
+          onChange={handleChange}
+          required
+        />
       </div>
-      <button type="submit">Update Review</button>
+      <button type="submit">Save</button>
     </form>
   );
 }

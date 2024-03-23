@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 function HomePage() {
   return (
     <div>
-      <h1>HomePage</h1>
+      <h1>MacroTracker</h1>
     </div>
   );
 }

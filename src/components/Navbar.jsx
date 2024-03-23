@@ -6,14 +6,28 @@ function Navbar() {
   const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
 
   return (
-    <nav className="navbar">
+    <nav
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "5px",
+        marginTop: "20px",
+      }}
+    >
       <NavLink
         to="/"
         className={({ isActive }) =>
           isActive ? "nav-link active" : "nav-link"
         }
       >
-        <img id="home-icon" src="./src/assets/home-icon.png" alt="Home" />
+        <img
+          id="home-icon"
+          src="./src/assets/home-icon.png"
+          alt="Home"
+          style={{ width: "30px", height: "30px" }}
+        />
       </NavLink>
       {isLoggedIn ? (
         <>
@@ -23,25 +37,7 @@ function Navbar() {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            User Profile
-          </NavLink>
-
-          <NavLink
-            to="/daily-stats"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Daily Stats
-          </NavLink>
-
-          <NavLink
-            to="/add-food"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Add Food
+            Profile
           </NavLink>
 
           <NavLink
@@ -50,12 +46,12 @@ function Navbar() {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            Foods
+            Meals History
           </NavLink>
 
-          <button onClick={logOutUser} className="nav-link">
+          <NavLink to="/" onClick={logOutUser} className="nav-link">
             Logout
-          </button>
+          </NavLink>
         </>
       ) : (
         <>

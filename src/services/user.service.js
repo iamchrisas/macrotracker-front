@@ -23,18 +23,8 @@ class UserService {
   }
 
   // Method to update user profile
-     editUserProfile(userData) {
-      return this.api.put("/api/users/edit-profile", userData);
-    }
-
-  // Method to view daily food stats
-  getDailyStats() {
-    return this.api.get("/api/users/daily-stats");
-  }
-
-  // Method to view weekly food stats
-  getWeeklyStats(startDate, endDate) {
-    return this.api.get(`/api/users/weekly-stats?startDate=${startDate}&endDate=${endDate}`);
+  editUserProfile(userData) {
+    return this.api.put("/api/users/edit-profile", userData);
   }
 }
 

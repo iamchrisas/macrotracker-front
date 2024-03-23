@@ -1,38 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
+import reviewService from "../services/review.service";
+import AddReviewPage from "./AddReviewPage";
 
 function FoodItemDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [foodItem, setFoodItem] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedFoodItemForReview, setSelectedFoodItemForReview] = useState(null); // Define the state
 
   useEffect(() => {
-    foodService
-      .getFoodItem(id)
-      .then((response) => {
-        setFoodItem(response.data);
+    const fetchFoodItemDetails = async () => {
+      try {
+        const response = await foodService.getFoodItem(id);
+        setFoodItem(response.data.foodItem); // Adjust according to your actual response structure
+        setReviews(response.data.reviews); // Adjust according to your actual response structure
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching food item:", error);
-        setError("Failed to fetch food item.");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data.");
         setLoading(false);
-      });
+      }
+    };
+
+    fetchFoodItemDetails();
   }, [id]);
+
+  const handleReviewButtonClick = () => {
+    setSelectedFoodItemForReview(id); // Use the id from useParams
+  };
+
+  const handleEdit = (reviewId) => {
+    navigate(`/edit-review/${reviewId}`);
+  };
+
+  const handleDelete = async (reviewId) => {
+    try {
+      await reviewService.deleteReview(reviewId);
+      setReviews(reviews.filter((review) => review.id !== reviewId));
+    } catch (error) {
+      console.error("Failed to delete review", error);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div>
-      <h2>{foodItem.name}</h2>
-      <p>Protein: {foodItem.protein}g</p>
-      <p>Carbs: {foodItem.carbs}g</p>
-      <p>Fat: {foodItem.fat}g</p>
-      <p>Calories: {foodItem.calories}</p>
-      {foodItem.image && <img src={foodItem.image} alt={foodItem.name} />}
+      <h2>{foodItem?.name}</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            width: "100%",
+            marginTop: "15px",
+          }}
+        >
+          <span>{foodItem?.calories} 🔥</span>
+          <span>{foodItem?.protein} P</span>
+          <span>{foodItem?.carbs} C</span>
+          <span>{foodItem?.fat} F</span>
+        </div>
+        {foodItem?.image && (
+          <img
+            src={foodItem.image}
+            alt={foodItem.name}
+            style={{ maxWidth: "300px", maxHeight: "300px", marginTop: "15px" }}
+          />
+        )}
+      </div>
+      <button onClick={handleReviewButtonClick}>Rate it</button>
+      {selectedFoodItemForReview && (
+        <AddReviewPage
+          foodItemId={selectedFoodItemForReview}
+          onClose={() => setSelectedFoodItemForReview(null)}
+        />
+      )}
+      <div>
+        <h3>Reviews</h3>
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
+            <div key={review.id}>
+              <p>Taste: {review.taste}</p>
+              <p>Digestion: {review.digestion}</p>
+              <p>Rate: {review.rate}</p>
+              <button onClick={() => handleEdit(review.id)}>Edit</button>
+              <button onClick={() => handleDelete(review.id)}>Delete</button>
+            </div>
+          ))
+        ) : (
+          <p>No reviews yet.</p>
+        )}
+      </div>
     </div>
   );
 }

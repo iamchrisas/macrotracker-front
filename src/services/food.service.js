@@ -40,6 +40,10 @@ class FoodService {
   deleteFoodItem(id) {
     return this.api.delete(`/api/foods/delete-food/${id}`);
   }
+  // Method to view daily food stats
+  getDailyStats() {
+    return this.api.get("/api/foods/daily-stats");
+  }
 }
 
 const foodService = new FoodService();

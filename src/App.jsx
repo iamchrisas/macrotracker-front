@@ -11,7 +11,7 @@ import Navbar from "./components/Navbar";
 // Import user profile and stats components
 import UserProfilePage from "./pages/UserProfilePage";
 import EditUserProfilePage from "./pages/EditUserProfilePage";
-import DailyStatsPage from "./pages/DailyStatsPage";
+
 
 // Import food-related components
 import FoodItemsPage from "./pages/FoodItemsPage";
@@ -38,19 +38,18 @@ function App() {
         {/* User profile and stats routes */}
         <Route path="/user-profile" element={<UserProfilePage />} />
         <Route path="/edit-profile" element={<EditUserProfilePage />} />
-        <Route path="/daily-stats" element={<DailyStatsPage />} />
 
         {/* Food-related routes */}
         <Route path="/foods" element={<FoodItemsPage />} />
         <Route path="/add-food" element={<AddFoodItemPage />} />
         <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
-        <Route path="/edit-food/:id" element={<EditFoodItemPage />} />
+        <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
 
         {/* Review-related routes */}
         <Route path="/reviews" element={<MyReviewsPage />} />
         <Route path="/add-review" element={<AddReviewPage />} />
         <Route path="/reviews/:id" element={<ReviewDetailsPage />} />
-        <Route path="/edit-review/:id" element={<EditReviewPage />} />
+        <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
       </Routes>
     </div>
   );
