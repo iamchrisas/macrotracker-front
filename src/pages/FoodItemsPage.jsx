@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import foodService from "../services/food.service";
-import userService from "../services/user.service";
 import { Link } from "react-router-dom";
-
 
 function FoodItemsPage() {
   const [foodItems, setFoodItems] = useState([]);
   const [dailyStats, setDailyStats] = useState(null);
-  const [selectedFoodItemForReview, setSelectedFoodItemForReview] =
-    useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -88,7 +84,7 @@ function FoodItemsPage() {
         </div>
       </div>
       {/* STATS */}
-      {dailyStats && (
+      {dailyStats ? (
         <div style={{ display: "flex", textAlign: "center", gap: "0px" }}>
           <p>
             {dailyStats.totals.calories} / {dailyStats.goals.calories} (
@@ -107,6 +103,8 @@ function FoodItemsPage() {
             {dailyStats.remaining.fat}) F
           </p>
         </div>
+      ) : (
+        <p>No stats available for this day.</p>
       )}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <ul style={{ listStyle: "none", padding: 10 }}>

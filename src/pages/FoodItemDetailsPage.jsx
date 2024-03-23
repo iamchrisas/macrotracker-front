@@ -11,7 +11,9 @@ function FoodItemDetailsPage() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedFoodItemForReview, setSelectedFoodItemForReview] = useState(null); // Define the state
+  const [selectedFoodItemForReview, setSelectedFoodItemForReview] =
+    useState(null); // Define the state
+  const [editingReview, setEditingReview] = useState(null);
 
   useEffect(() => {
     const fetchFoodItemDetails = async () => {
@@ -35,7 +37,8 @@ function FoodItemDetailsPage() {
   };
 
   const handleEdit = (reviewId) => {
-    navigate(`/edit-review/${reviewId}`);
+    const reviewToEdit = reviews.find((review) => review.id === reviewId);
+    setEditingReview(reviewToEdit);
   };
 
   const handleDelete = async (reviewId) => {
@@ -89,20 +92,42 @@ function FoodItemDetailsPage() {
           onClose={() => setSelectedFoodItemForReview(null)}
         />
       )}
+      <button onClick={() => navigate("/foods")}>Go Back</button>
       <div>
         <h3>Reviews</h3>
-        {reviews.length > 0 ? (
+        {reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
           reviews.map((review) => (
             <div key={review.id}>
-              <p>Taste: {review.taste}</p>
-              <p>Digestion: {review.digestion}</p>
-              <p>Rate: {review.rate}</p>
-              <button onClick={() => handleEdit(review.id)}>Edit</button>
-              <button onClick={() => handleDelete(review.id)}>Delete</button>
+              {editingReview?.id === review.id ? (
+                // Use EditReviewPage for inline editing
+                <EditReviewPage
+                  review={editingReview}
+                  isInlineMode={true}
+                  onSave={(updatedReview) => {
+                    // Update the review in the state
+                    const updatedReviews = reviews.map((r) =>
+                      r.id === updatedReview.id ? updatedReview : r
+                    );
+                    setReviews(updatedReviews);
+                    setEditingReview(null); // Exit editing mode
+                  }}
+                  onCancel={() => setEditingReview(null)}
+                />
+              ) : (
+                <>
+                  <p>Taste: {review.taste}</p>
+                  <p>Digestion: {review.digestion}</p>
+                  <p>Rate: {review.rate}</p>
+                  <button onClick={() => handleEdit(review.id)}>Edit</button>
+                  <button onClick={() => handleDelete(review.id)}>
+                    Delete
+                  </button>
+                </>
+              )}
             </div>
           ))
-        ) : (
-          <p>No reviews yet.</p>
         )}
       </div>
     </div>

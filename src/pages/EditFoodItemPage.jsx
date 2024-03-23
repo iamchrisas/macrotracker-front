@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import foodService from "../services/food.service";
 
-
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [foodItem, setFoodItem] = useState({
     name: "",
-    protein: 0,
-    carbs: 0,
-    fat: 0,
-    calories: 0,
+    protein: "",
+    carbs: "",
+    fat: "",
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -26,7 +24,10 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        setFoodItem({ ...response.data, calories: calculateCalories(response.data) });
+        setFoodItem({
+          ...response.data,
+          calories: calculateCalories(response.data),
+        });
         setLoading(false);
       })
       .catch((error) => {
@@ -35,31 +36,31 @@ function EditFoodItemPage() {
         setLoading(false);
       });
   }, [id]);
-// Function to calculate calories
-const calculateCalories = (item) => {
-  return item.protein * 4 + item.carbs * 4 + item.fat * 9;
-};
-
-const validateField = (name, value) => {
-  let msg = "";
-  if (value < 0) {
-    msg = `${name} must be a positive number.`;
-  }
-  setValidationMsg({ ...validationMsg, [name]: msg });
-};
-
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  const updatedFoodItem = {
-    ...foodItem,
-    [name]: name === "name" ? value : parseFloat(value) || 0,
+  // Function to calculate calories
+  const calculateCalories = (item) => {
+    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
   };
-  if (["protein", "carbs", "fat"].includes(name)) {
-    updatedFoodItem.calories = calculateCalories(updatedFoodItem);
-  }
-  setFoodItem(updatedFoodItem);
-  validateField(name, parseFloat(value));
-};
+
+  const validateField = (name, value) => {
+    let msg = "";
+    if (value < 0) {
+      msg = `${name} must be a positive number.`;
+    }
+    setValidationMsg({ ...validationMsg, [name]: msg });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const updatedFoodItem = {
+      ...foodItem,
+      [name]: name === "name" ? value : parseFloat(value) || 0,
+    };
+    if (["protein", "carbs", "fat"].includes(name)) {
+      updatedFoodItem.calories = calculateCalories(updatedFoodItem);
+    }
+    setFoodItem(updatedFoodItem);
+    validateField(name, parseFloat(value));
+  };
 
   const handleFileChange = (e) => {
     // Added for image handling

@@ -2,36 +2,43 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import reviewService from "../services/review.service";
 
-function EditReviewPage() {
-  const { id } = useParams();
+function EditReviewPage({ review, isInlineMode, onSave, onCancel }) {
+  // Use useParams and useNavigate only if not in inline mode
+  const { id } = isInlineMode ? { id: review?.id } : useParams();
   const navigate = useNavigate();
   const [reviewData, setReviewData] = useState({
     food: "",
     taste: "",
     digestion: "",
-    rate: 1,
+    rate: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    reviewService
-      .getReviewById(id)
-      .then((response) => {
-        // Ensure you only set fields that exist in your model
-        setReviewData({
-          food: response.data.food,
-          taste: response.data.taste,
-          digestion: response.data.digestion,
-          rate: response.data.rate,
+    if (!isInlineMode) {
+      // Fetch review data only if in standalone mode
+      reviewService
+        .getReviewById(id)
+        .then((response) => {
+          setReviewData({
+            food: response.data.food,
+            taste: response.data.taste,
+            digestion: response.data.digestion,
+            rate: response.data.rate,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError("Failed to fetch review");
+          setLoading(false);
         });
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError("Failed to fetch review");
-        setLoading(false);
-      });
-  }, [id]);
+    } else {
+      // If in inline mode, initialize form with passed review data
+      setReviewData(review);
+      setLoading(false);
+    }
+  }, [id, isInlineMode, review]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +53,11 @@ function EditReviewPage() {
     reviewService
       .updateReview(id, reviewData)
       .then(() => {
-        navigate("/reviews");
+        if (isInlineMode) {
+          onSave && onSave(reviewData);
+        } else {
+          navigate("/foods");
+        }
       })
       .catch((error) => {
         console.error("Failed to update review", error);
@@ -107,9 +118,16 @@ function EditReviewPage() {
           value={reviewData.rate}
           onChange={handleChange}
           required
+          min="1"
+          max="5"
         />
       </div>
       <button type="submit">Save</button>
+      {isInlineMode && (
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
+      )}
     </form>
   );
 }

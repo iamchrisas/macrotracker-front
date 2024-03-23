@@ -6,12 +6,12 @@ function EditUserProfilePage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    currentWeight: 0,
-    weightGoal: 0,
-    dailyCalorieGoal: 0,
-    dailyProteinGoal: 0,
-    dailyCarbGoal: 0,
-    dailyFatGoal: 0,
+    currentWeight: "",
+    weightGoal: "",
+    dailyCalorieGoal: "",
+    dailyProteinGoal: "",
+    dailyCarbGoal: "",
+    dailyFatGoal: "",
   });
   const navigate = useNavigate();
 

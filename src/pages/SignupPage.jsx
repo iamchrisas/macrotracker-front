@@ -39,10 +39,8 @@ function Signup() {
     e.preventDefault();
     authService
       .signup(formData)
-      .then((response) => {
-        storeToken(response.data.authToken); // Store the received token
-        authenticateUser(); // Update authentication state
-        navigate("/user-profile"); // Navigate to a user-specific page after login
+      .then(() => {
+        navigate("/login"); // Redirect to login page after successful signup
       })
       .catch((err) => {
         console.error("Sign Up Error:", err);

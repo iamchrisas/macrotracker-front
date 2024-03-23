@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 function AddFoodItemPage() {
   const [foodItem, setFoodItem] = useState({
     name: "",
-    protein: 0,
-    carbs: 0,
-    fat: 0,
+    protein: "",
+    carbs: "",
+    fat: "",
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -69,7 +69,7 @@ function AddFoodItemPage() {
       .then(() => {
         alert("Food item added successfully!");
         // Reset form state
-        setFoodItem({ name: "", protein: 0, carbs: 0, fat: 0 });
+        setFoodItem({ name: "", protein: "", carbs: "", fat: "" });
         setFile(null);
         setValidationMsg({ protein: "", carbs: "", fat: "" }); // Reset validation messages
       })

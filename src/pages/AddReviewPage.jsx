@@ -5,7 +5,7 @@ function AddReviewPage({ foodItemId, onClose }) {
   const [reviewData, setReviewData] = useState({
     taste: "",
     digestion: "",
-    rate: 1,
+    rate: "",
   });
 
   const handleChange = (e) => {
@@ -39,31 +39,75 @@ function AddReviewPage({ foodItemId, onClose }) {
       <h2>Add Review</h2>
       <div>
         <label>Taste:</label>
-        <select
-          name="taste"
-          value={reviewData.taste}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select</option>
-          <option value="bad">Bad</option>
-          <option value="ok">Ok</option>
-          <option value="great">Great</option>
-        </select>
+        <div>
+          <input
+            type="radio"
+            id="taste_bad"
+            name="taste"
+            value="bad"
+            checked={reviewData.taste === "bad"}
+            onChange={handleChange}
+          />
+          <label htmlFor="taste_bad">Bad</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="taste_ok"
+            name="taste"
+            value="ok"
+            checked={reviewData.taste === "ok"}
+            onChange={handleChange}
+          />
+          <label htmlFor="taste_ok">Ok</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="taste_great"
+            name="taste"
+            value="great"
+            checked={reviewData.taste === "great"}
+            onChange={handleChange}
+          />
+          <label htmlFor="taste_great">Great</label>
+        </div>
       </div>
       <div>
         <label>Digestion:</label>
-        <select
-          name="digestion"
-          value={reviewData.digestion}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select</option>
-          <option value="bad">Bad</option>
-          <option value="ok">Ok</option>
-          <option value="great">Great</option>
-        </select>
+        <div>
+          <input
+            type="radio"
+            id="digestion_bad"
+            name="digestion"
+            value="bad"
+            checked={reviewData.digestion === "bad"}
+            onChange={handleChange}
+          />
+          <label htmlFor="digestion_bad">Bad</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="digestion_ok"
+            name="digestion"
+            value="ok"
+            checked={reviewData.digestion === "ok"}
+            onChange={handleChange}
+          />
+          <label htmlFor="digestion_ok">Ok</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="digestion_great"
+            name="digestion"
+            value="great"
+            checked={reviewData.digestion === "great"}
+            onChange={handleChange}
+          />
+          <label htmlFor="digestion_great">Great</label>
+        </div>
       </div>
       <div>
         <label>Rate (1-5):</label>
@@ -73,6 +117,8 @@ function AddReviewPage({ foodItemId, onClose }) {
           value={reviewData.rate}
           onChange={handleChange}
           required
+          min="1"
+          max="5"
         />
       </div>
       <button type="submit">Submit</button>

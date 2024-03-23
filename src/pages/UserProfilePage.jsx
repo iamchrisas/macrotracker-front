@@ -6,12 +6,12 @@ function UserProfilePage() {
   const [userProfile, setUserProfile] = useState({
     name: "",
     email: "",
-    currentWeight: 0,
-    weightGoal: 0,
-    dailyCalorieGoal: 0,
-    dailyProteinGoal: 0,
-    dailyCarbGoal: 0,
-    dailyFatGoal: 0,
+    currentWeight: "",
+    weightGoal: "",
+    dailyCalorieGoal: "",
+    dailyProteinGoal: "",
+    dailyCarbGoal: "",
+    dailyFatGoal: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,13 +46,13 @@ function UserProfilePage() {
       <p>Name: {userProfile.name}</p>
       <p>Email: {userProfile.email}</p>
 
-      <p>Current Weight: {userProfile.currentWeight}kg</p>
-      <p>Weight Goal: {userProfile.weightGoal}kg</p>
+      <p>Current Weight: {userProfile.currentWeight} kg</p>
+      <p>Weight Goal: {userProfile.weightGoal} kg</p>
 
       <p>Daily Calorie Goal: {userProfile.dailyCalorieGoal} kcal</p>
-      <p>Daily Protein Goal: {userProfile.dailyProteinGoal}g</p>
-      <p>Daily Carb Goal: {userProfile.dailyCarbGoal}g</p>
-      <p>Daily Fat Goal: {userProfile.dailyFatGoal}g</p>
+      <p>Daily Protein Goal: {userProfile.dailyProteinGoal} g</p>
+      <p>Daily Carb Goal: {userProfile.dailyCarbGoal} g</p>
+      <p>Daily Fat Goal: {userProfile.dailyFatGoal} g</p>
 
       <button style={{ marginTop: "20px" }}>
         <Link to="/edit-profile">Edit Profile</Link>
