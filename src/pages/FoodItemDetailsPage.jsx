@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 import reviewService from "../services/review.service";
 import AddReviewPage from "./AddReviewPage";
+import EditReviewPage from './EditReviewPage';
 
 function FoodItemDetailsPage() {
   const { id } = useParams();
