@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 function AddFoodItemPage() {
   const [foodItem, setFoodItem] = useState({
     name: "",
-    protein: "",
-    carbs: "",
-    fat: "",
+    protein: 0,
+    carbs: 0,
+    fat: 0,
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
