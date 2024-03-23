@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 import reviewService from "../services/review.service";
 import AddReviewPage from "./AddReviewPage";
-import EditReviewPage from './EditReviewPage';
+import EditReviewPage from "./EditReviewPage";
 
 function FoodItemDetailsPage() {
   const { id } = useParams();
@@ -20,8 +20,14 @@ function FoodItemDetailsPage() {
     const fetchFoodItemDetails = async () => {
       try {
         const response = await foodService.getFoodItem(id);
-        setFoodItem(response.data.foodItem); // Adjust according to your actual response structure
-        setReviews(response.data.reviews); // Adjust according to your actual response structure
+        if (response.data.foodItem) {
+          // Ensure foodItem is not null
+          setFoodItem(response.data.foodItem);
+          setReviews(response.data.reviews);
+        } else {
+          console.error("No foodItem found in response");
+          setError("No foodItem found.");
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
