@@ -52,16 +52,8 @@ function FoodItemDetailsPage() {
     );
   }
 
-  if (!foodItem) {
-    return (
-      <div>
-        Food item not found.
-        <button onClick={() => navigate("/foods")}>Go Back</button>
-      </div>
-    );
-  }
   const handleReviewButtonClick = () => {
-    setSelectedFoodItemForReview(id); // Use the id from useParams
+    setSelectedFoodItemForReview(id);
   };
 
   const handleEdit = (reviewId) => {
@@ -77,10 +69,6 @@ function FoodItemDetailsPage() {
       console.error("Failed to delete review", error);
     }
   };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <div>
       <h2>{foodItem?.name}</h2>
