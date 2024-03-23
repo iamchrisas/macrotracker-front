@@ -46,8 +46,8 @@ function UserProfilePage() {
       <p>Name: {userProfile.name}</p>
       <p>Email: {userProfile.email}</p>
 
-      <p>Current Weight: {userProfile.currentWeight} kg</p>
-      <p>Weight Goal: {userProfile.weightGoal} kg</p>
+      <p>Current Weight: {userProfile.currentWeight}kg</p>
+      <p>Weight Goal: {userProfile.weightGoal}kg</p>
 
       <p>Daily Calorie Goal: {userProfile.dailyCalorieGoal} kcal</p>
       <p>Daily Protein Goal: {userProfile.dailyProteinGoal}g</p>

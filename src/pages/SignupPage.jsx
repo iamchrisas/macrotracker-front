@@ -10,12 +10,29 @@ function Signup() {
     name: "",
   });
   const [error, setError] = useState(""); // State to hold sign-up error
+  const [passwordError, setPasswordError] = useState(""); // State for password validation message
 
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === "password") {
+      validatePassword(value);
+    }
+  };
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    if (!regex.test(password)) {
+      setPasswordError(
+        "Password must have at least 6 characters and contain one number, one lowercase and one uppercase letter."
+      );
+    } else {
+      setPasswordError("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -23,9 +40,9 @@ function Signup() {
     authService
       .signup(formData)
       .then((response) => {
-        storeToken(response.data.authToken);
-        authenticateUser();
-        navigate("/users/user-profile");
+        storeToken(response.data.authToken); // Store the received token
+        authenticateUser(); // Update authentication state
+        navigate("/user-profile"); // Navigate to a user-specific page after login
       })
       .catch((err) => {
         console.error("Sign Up Error:", err);
@@ -37,6 +54,17 @@ function Signup() {
     <div>
       <h3>Signup</h3>
       <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="John Doe"
+            required
+          />
+        </label>
         <label>
           Email:
           <input
@@ -59,17 +87,7 @@ function Signup() {
             required
           />
         </label>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="John Doe"
-            required
-          />
-        </label>
+        {passwordError && <div style={{ color: "red" }}>{passwordError}</div>}
         {error && <div style={{ color: "red" }}>{error}</div>}
         <button type="submit">Signup</button>
       </form>

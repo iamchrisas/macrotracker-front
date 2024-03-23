@@ -22,12 +22,7 @@ function Navbar() {
           isActive ? "nav-link active" : "nav-link"
         }
       >
-        <img
-          id="home-icon"
-          src="./src/assets/home-icon.png"
-          alt="Home"
-          style={{ width: "30px", height: "30px" }}
-        />
+        Home
       </NavLink>
       {isLoggedIn ? (
         <>
