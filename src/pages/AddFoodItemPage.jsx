@@ -111,7 +111,6 @@ function AddFoodItemPage() {
             name="protein"
             value={foodItem.protein}
             onChange={handleChange}
-            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -124,7 +123,6 @@ function AddFoodItemPage() {
             name="carbs"
             value={foodItem.carbs}
             onChange={handleChange}
-            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -137,7 +135,6 @@ function AddFoodItemPage() {
             name="fat"
             value={foodItem.fat}
             onChange={handleChange}
-            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
