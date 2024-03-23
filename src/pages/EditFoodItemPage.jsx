@@ -5,11 +5,13 @@ import foodService from "../services/food.service";
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  // Initialize foodItem state without calories since it's calculated
   const [foodItem, setFoodItem] = useState({
     name: "",
     protein: 0,
     carbs: 0,
     fat: 0,
+    calories: 0, // Add calories here to keep track of it in the state
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -24,10 +26,12 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        setFoodItem({
+        // Assume response.data contains the food item with name, protein, carbs, and fat
+        const itemWithCalories = {
           ...response.data,
-          calories: calculateCalories(response.data),
-        });
+          calories: calculateCalories(response.data), // Calculate calories and add to item
+        };
+        setFoodItem(itemWithCalories);
         setLoading(false);
       })
       .catch((error) => {
@@ -36,6 +40,7 @@ function EditFoodItemPage() {
         setLoading(false);
       });
   }, [id]);
+
   // Function to calculate calories
   const calculateCalories = (item) => {
     return item.protein * 4 + item.carbs * 4 + item.fat * 9;
@@ -51,19 +56,20 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
     const updatedFoodItem = {
       ...foodItem,
-      [name]: name === "name" ? value : parseFloat(value) || 0,
+      [name]: updatedValue,
     };
+    // Recalculate calories if protein, carbs, or fat is changed
     if (["protein", "carbs", "fat"].includes(name)) {
       updatedFoodItem.calories = calculateCalories(updatedFoodItem);
     }
     setFoodItem(updatedFoodItem);
-    validateField(name, parseFloat(value));
+    validateField(name, updatedValue);
   };
 
   const handleFileChange = (e) => {
-    // Added for image handling
     setFile(e.target.files[0]);
   };
 
@@ -75,11 +81,13 @@ function EditFoodItemPage() {
       return;
     }
 
-    const formData = new FormData(); // Use FormData to handle file upload
-    formData.append("name", foodItem.name);
-    formData.append("protein", foodItem.protein);
-    formData.append("carbs", foodItem.carbs);
-    formData.append("fat", foodItem.fat);
+    const formData = new FormData();
+    Object.entries(foodItem).forEach(([key, value]) => {
+      if (key !== "calories") {
+        // Exclude calories from formData since it's calculated
+        formData.append(key, value);
+      }
+    });
     if (file) {
       formData.append("image", file);
     }
@@ -120,7 +128,6 @@ function EditFoodItemPage() {
             name="protein"
             value={foodItem.protein}
             onChange={handleChange}
-            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -133,7 +140,6 @@ function EditFoodItemPage() {
             name="carbs"
             value={foodItem.carbs}
             onChange={handleChange}
-            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -146,7 +152,6 @@ function EditFoodItemPage() {
             name="fat"
             value={foodItem.fat}
             onChange={handleChange}
-            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
@@ -154,7 +159,7 @@ function EditFoodItemPage() {
         </div>
         <div>
           <label>Calories:</label>
-          <span>{foodItem.calories}</span>{" "}
+          <span>{foodItem.calories}</span>
           {/* Displaying calories without an input field */}
         </div>
         <div>

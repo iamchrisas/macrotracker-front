@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import reviewService from "../services/review.service";
 
 function AddReviewPage({ foodItemId, onClose }) {
+  if (!foodItemId) {
+    return <div>Loading food item details...</div>;
+  }
   const [reviewData, setReviewData] = useState({
     taste: "",
     digestion: "",

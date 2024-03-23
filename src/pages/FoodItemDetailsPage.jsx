@@ -13,7 +13,7 @@ function FoodItemDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedFoodItemForReview, setSelectedFoodItemForReview] =
-    useState(null); // Define the state
+    useState(null);
   const [editingReview, setEditingReview] = useState(null);
 
   useEffect(() => {
@@ -39,6 +39,27 @@ function FoodItemDetailsPage() {
     fetchFoodItemDetails();
   }, [id]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        {error}
+        <button onClick={() => navigate("/foods")}>Go Back</button>
+      </div>
+    );
+  }
+
+  if (!foodItem) {
+    return (
+      <div>
+        Food item not found.
+        <button onClick={() => navigate("/foods")}>Go Back</button>
+      </div>
+    );
+  }
   const handleReviewButtonClick = () => {
     setSelectedFoodItemForReview(id); // Use the id from useParams
   };
