@@ -2,26 +2,17 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-
-// Import authentication-related components
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
-
-// Import user profile and stats components
 import UserProfilePage from "./pages/UserProfilePage";
 import EditUserProfilePage from "./pages/EditUserProfilePage";
-
-
-// Import food-related components
 import FoodItemsPage from "./pages/FoodItemsPage";
 import AddFoodItemPage from "./pages/AddFoodItemPage";
 import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
 import EditFoodItemPage from "./pages/EditFoodItemPage";
-
-// Import review-related components
-import AddReviewPage from "./pages/AddReviewPage";
 import MyReviewsPage from "./pages/MyReviewsPage";
+import AddReviewPage from "./pages/AddReviewPage"; // Ensure this is imported
 import ReviewDetailsPage from "./pages/ReviewDetailsPage";
 import EditReviewPage from "./pages/EditReviewPage";
 
@@ -47,7 +38,11 @@ function App() {
 
         {/* Review-related routes */}
         <Route path="/reviews" element={<MyReviewsPage />} />
-        <Route path="/add-review" element={<AddReviewPage />} />
+        {/* Adjusted route for AddReviewPage to include foodItemId */}
+        <Route
+          path="/foods/:foodItemId/add-review"
+          element={<AddReviewPage />}
+        />
         <Route path="/reviews/:id" element={<ReviewDetailsPage />} />
         <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
       </Routes>
