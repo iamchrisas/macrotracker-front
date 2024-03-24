@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 
 // Import all page components
@@ -45,8 +44,6 @@ function App() {
           {/* Review-related routes */}
           <Route path="/reviews/add-review" element={<AddReviewPage />} />
           <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
-          {/* Catch-all route for undefined paths, redirecting to HomePage */}
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </div>
