@@ -12,6 +12,8 @@ import FoodItemsPage from "./pages/FoodItemsPage";
 import AddFoodItemPage from "./pages/AddFoodItemPage";
 import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
 import EditFoodItemPage from "./pages/EditFoodItemPage";
+import AddReviewPage from "./pages/AddReviewPage";
+import EditReviewPage from "./pages/EditReviewPage";
 
 function App() {
   return (
