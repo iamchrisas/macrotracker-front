@@ -17,25 +17,27 @@ function App() {
   return (
     <div className="app">
       <Navbar />
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-          {/* Authentication-related routes */}
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
+        {/* Authentication-related routes */}
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-          {/* User profile and stats routes */}
-          <Route path="/user-profile" element={<UserProfilePage />} />
-          <Route path="/edit-profile" element={<EditUserProfilePage />} />
+        {/* User profile and stats routes */}
+        <Route path="/user-profile" element={<UserProfilePage />} />
+        <Route path="/edit-profile" element={<EditUserProfilePage />} />
 
-          {/* Food-related routes */}
-          <Route path="/foods" element={<FoodItemsPage />} />
-          <Route path="/add-food" element={<AddFoodItemPage />} />
-          <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
-          <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
-        </Routes>
-      </Router>
+        {/* Food-related routes */}
+        <Route path="/foods" element={<FoodItemsPage />} />
+        <Route path="/add-food" element={<AddFoodItemPage />} />
+        <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
+        <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
+
+        {/* Review-related routes */}
+        <Route path="/add-review" element={<AddReviewPage />} />
+        <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
+      </Routes>
     </div>
   );
 }
