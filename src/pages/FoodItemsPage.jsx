@@ -9,12 +9,41 @@ function FoodItemsPage() {
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  // Define the fetchDailyStats function inside the component
+  async function fetchDailyStats(date) {
+    const formattedDate = date.toISOString().split("T")[0];
+    // Assuming your foodService.getDailyStats method internally makes a fetch call to the backend
+    // You can replace it with this direct fetch call or adjust the foodService.getDailyStats method accordingly
+    const response = await fetch(`/api/daily-stats?date=${formattedDate}`);
+    const data = await response.json();
+    return data;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const foodResponse = await foodService.getAllFoodItems();
+        // Use the fetchDailyStats function to get stats for the current date
+        const statsResponse = await fetchDailyStats(currentDate);
+        setFoodItems(foodResponse.data);
+        setDailyStats(statsResponse); // Adjust according to the expected format
+      } catch (error) {
+        console.error("Error:", error);
+        setError("Failed to fetch data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [currentDate]);
+
   const formatDate = (date) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time part to compare dates only
+    today.setHours(0, 0, 0, 0);
 
     const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1); // Set to yesterday
+    yesterday.setDate(yesterday.getDate() - 1);
 
     if (date.setHours(0, 0, 0, 0) === today.getTime()) {
       return "Today";
@@ -29,40 +58,16 @@ function FoodItemsPage() {
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-    const formattedDate = currentDate.toISOString().split("T")[0];
-    const fetchFoodItems = foodService.getAllFoodItems();
-    const fetchDailyStats = foodService.getDailyStats(formattedDate);
-
-    Promise.all([fetchFoodItems, fetchDailyStats])
-      .then(([foodResponse, statsResponse]) => {
-        setFoodItems(foodResponse.data);
-        setDailyStats(statsResponse.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setError("Failed to fetch data.");
-        setLoading(false);
-      });
-  }, [currentDate]);
-
-  const goToPreviousDay = () => {
+  const goToPreviousDay = () =>
     setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 1)));
-  };
+  const goToToday = () => setCurrentDate(new Date());
 
-  const goToToday = () => {
-    setCurrentDate(new Date());
-  };
-
-  const filteredItems = foodItems.filter((item) => {
-    const itemDate = new Date(item.date);
-    return itemDate.toDateString() === currentDate.toDateString();
-  });
+  const filteredItems = foodItems.filter(
+    (item) => new Date(item.date).toDateString() === currentDate.toDateString()
+  );
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>

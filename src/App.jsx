@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+// Import all page components
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -11,41 +12,38 @@ import FoodItemsPage from "./pages/FoodItemsPage";
 import AddFoodItemPage from "./pages/AddFoodItemPage";
 import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
 import EditFoodItemPage from "./pages/EditFoodItemPage";
-import MyReviewsPage from "./pages/MyReviewsPage";
-import AddReviewPage from "./pages/AddReviewPage"; // Ensure this is imported
-import ReviewDetailsPage from "./pages/ReviewDetailsPage";
+import AddReviewPage from "./pages/AddReviewPage";
 import EditReviewPage from "./pages/EditReviewPage";
 
 function App() {
   return (
     <div className="app">
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        {/* Authentication-related routes */}
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
 
-        {/* User profile and stats routes */}
-        <Route path="/user-profile" element={<UserProfilePage />} />
-        <Route path="/edit-profile" element={<EditUserProfilePage />} />
+          {/* Authentication-related routes */}
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-        {/* Food-related routes */}
-        <Route path="/foods" element={<FoodItemsPage />} />
-        <Route path="/add-food" element={<AddFoodItemPage />} />
-        <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
-        <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
+          {/* User profile and stats routes */}
+          <Route path="/user-profile" element={<UserProfilePage />} />
+          <Route path="/edit-profile" element={<EditUserProfilePage />} />
 
-        {/* Review-related routes */}
-        <Route path="/reviews" element={<MyReviewsPage />} />
-        {/* Adjusted route for AddReviewPage to include foodItemId */}
-        <Route
-          path="/foods/:foodItemId/add-review"
-          element={<AddReviewPage />}
-        />
-        <Route path="/reviews/:id" element={<ReviewDetailsPage />} />
-        <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
-      </Routes>
+          {/* Food-related routes */}
+          <Route path="/foods" element={<FoodItemsPage />} />
+          <Route path="/add-food" element={<AddFoodItemPage />} />
+          <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
+          <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
+
+          {/* Review-related routes */}
+          <Route path="/reviews/add-review" element={<AddReviewPage />} />
+          <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
+          {/* Catch-all route for undefined paths, redirecting to HomePage */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

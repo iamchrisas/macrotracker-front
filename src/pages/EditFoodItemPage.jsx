@@ -5,13 +5,12 @@ import foodService from "../services/food.service";
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  // Initialize foodItem state without calories since it's calculated
   const [foodItem, setFoodItem] = useState({
     name: "",
     protein: 0,
     carbs: 0,
     fat: 0,
-    calories: 0, // Add calories here to keep track of it in the state
+    calories: 0,
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -23,25 +22,23 @@ function EditFoodItemPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    foodService
-      .getFoodItem(id)
-      .then((response) => {
-        // Assume response.data contains the food item with name, protein, carbs, and fat
-        const itemWithCalories = {
+    const fetchFoodItem = async () => {
+      try {
+        const response = await foodService.getFoodItem(id);
+        setFoodItem({
           ...response.data,
-          calories: calculateCalories(response.data), // Calculate calories and add to item
-        };
-        setFoodItem(itemWithCalories);
-        setLoading(false);
-      })
-      .catch((error) => {
+          calories: calculateCalories(response.data),
+        });
+      } catch (error) {
         console.error("Error fetching food item:", error);
         setError("Failed to fetch food item");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchFoodItem();
   }, [id]);
 
-  // Function to calculate calories
   const calculateCalories = (item) => {
     return item.protein * 4 + item.carbs * 4 + item.fat * 9;
   };
@@ -56,52 +53,41 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
-    const updatedFoodItem = {
-      ...foodItem,
-      [name]: updatedValue,
-    };
-    // Recalculate calories if protein, carbs, or fat is changed
+    const newValue = name === "name" ? value : parseFloat(value) || 0;
+    const updatedFoodItem = { ...foodItem, [name]: newValue };
     if (["protein", "carbs", "fat"].includes(name)) {
       updatedFoodItem.calories = calculateCalories(updatedFoodItem);
     }
     setFoodItem(updatedFoodItem);
-    validateField(name, updatedValue);
+    validateField(name, newValue);
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const hasError = Object.values(validationMsg).some((msg) => msg !== "");
-    if (hasError) {
+    if (Object.values(validationMsg).some((msg) => msg !== "")) {
       alert("Please correct the errors before submitting.");
       return;
     }
-
     const formData = new FormData();
-    Object.entries(foodItem).forEach(([key, value]) => {
-      if (key !== "calories") {
-        // Exclude calories from formData since it's calculated
-        formData.append(key, value);
-      }
-    });
+    Object.entries(foodItem).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
     if (file) {
       formData.append("image", file);
     }
 
-    foodService
-      .editFoodItem(id, formData)
-      .then(() => {
-        alert("Food item updated successfully");
-        navigate("/foods");
-      })
-      .catch((error) => {
-        console.error("Error updating food item:", error);
-        alert("Failed to update food item.");
-      });
+    try {
+      await foodService.editFoodItem(id, formData);
+      alert("Food item updated successfully");
+      navigate("/foods");
+    } catch (error) {
+      console.error("Error updating food item:", error);
+      alert("Failed to update food item.");
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -158,9 +144,8 @@ function EditFoodItemPage() {
           )}
         </div>
         <div>
-          <label>Calories:</label>
+          <label>Calories: </label>
           <span>{foodItem.calories}</span>
-          {/* Displaying calories without an input field */}
         </div>
         <div>
           <label htmlFor="image">Image:</label>
@@ -175,9 +160,9 @@ function EditFoodItemPage() {
           Save
         </button>
         <div style={{ marginTop: "10px" }}>
-          <button>
-            <Link to="/foods">Go back</Link>
-          </button>
+          <Link to="/foods">
+            <button type="button">Go back</button>
+          </Link>
         </div>
       </form>
     </div>

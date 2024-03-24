@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import foodService from "../services/food.service";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import foodService from "../services/food.service";
 
 function AddFoodItemPage() {
   const [foodItem, setFoodItem] = useState({
@@ -16,25 +16,21 @@ function AddFoodItemPage() {
     fat: "",
   });
 
-  // Function to calculate calories
   const calculateCalories = () => {
     return foodItem.protein * 4 + foodItem.carbs * 4 + foodItem.fat * 9;
   };
 
   const validateField = (name, value) => {
-    let msg = "";
-    if (value < 0) {
-      msg = `${name} must be a positive number.`;
-    }
-    setValidationMsg({ ...validationMsg, [name]: msg });
+    const msg = value < 0 ? `${name} must be a positive number.` : "";
+    setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: msg }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFoodItem({
-      ...foodItem,
+    setFoodItem((prevItem) => ({
+      ...prevItem,
       [name]: name === "name" ? value : parseFloat(value) || 0,
-    });
+    }));
     if (["protein", "carbs", "fat"].includes(name)) {
       validateField(name, parseFloat(value));
     }
@@ -44,39 +40,32 @@ function AddFoodItemPage() {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check for validation messages
-    const hasError = Object.values(validationMsg).some((msg) => msg !== "");
-    if (hasError) {
+    if (Object.values(validationMsg).some((msg) => msg !== "")) {
       alert("Please correct the errors before submitting.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", foodItem.name);
-    formData.append("protein", foodItem.protein);
-    formData.append("carbs", foodItem.carbs);
-    formData.append("fat", foodItem.fat);
-    formData.append("calories", calculateCalories()); // Calculate and append calories
+    Object.entries(foodItem).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
+    formData.append("calories", calculateCalories());
     if (file) {
       formData.append("image", file);
     }
 
-    // Call your foodService method to handle the form submission
-    foodService
-      .addFoodItem(formData)
-      .then(() => {
-        alert("Food item added successfully!");
-        // Reset form state
-        setFoodItem({ name: "", protein: "", carbs: "", fat: "" });
-        setFile(null);
-        setValidationMsg({ protein: "", carbs: "", fat: "" }); // Reset validation messages
-      })
-      .catch((error) => {
-        console.error("Error adding food item:", error);
-        alert("Failed to add food item.");
-      });
+    try {
+      await foodService.addFoodItem(formData);
+      alert("Food item added successfully!");
+      setFoodItem({ name: "", protein: 0, carbs: 0, fat: 0 });
+      setFile(null);
+      setValidationMsg({ protein: "", carbs: "", fat: "" });
+    } catch (error) {
+      console.error("Error adding food item:", error);
+      alert("Failed to add food item.");
+    }
   };
 
   return (
@@ -144,6 +133,7 @@ function AddFoodItemPage() {
           <label>Calories:</label>
           <span>{calculateCalories()}</span>
         </div>
+
         <div style={{ marginBottom: "20px" }}>
           <label htmlFor="image">Image:</label>
           <input

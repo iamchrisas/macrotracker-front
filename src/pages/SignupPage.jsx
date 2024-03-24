@@ -9,16 +9,14 @@ function Signup() {
     password: "",
     name: "",
   });
-  const [error, setError] = useState(""); // State to hold sign-up error
-  const [passwordError, setPasswordError] = useState(""); // State for password validation message
+  const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const { storeToken, authenticateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
     if (name === "password") {
       validatePassword(value);
     }
@@ -37,23 +35,21 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    authService
-      .signup(formData)
-      .then(() => {
-        navigate("/login"); // Redirect to login page after successful signup
-      })
-      .catch((err) => {
-        console.error("Sign Up Error:", err);
-        setError("Failed to sign up. Please try again."); // Provide user feedback
-      });
+    try {
+      await authService.signup(formData);
+      navigate("/login");
+    } catch (err) {
+      console.error("Sign Up Error:", err);
+      setError("Failed to sign up. Please try again.");
+    }
   };
 
   return (
     <div>
       <h3>Signup</h3>
       <form onSubmit={handleSubmit}>
-        <label>
-          Name:
+        <div>
+          <label>Name:</label>
           <input
             type="text"
             name="name"
@@ -62,9 +58,9 @@ function Signup() {
             placeholder="John Doe"
             required
           />
-        </label>
-        <label>
-          Email:
+        </div>
+        <div>
+          <label>Email:</label>
           <input
             type="email"
             name="email"
@@ -73,9 +69,9 @@ function Signup() {
             placeholder="e.g. john@domain.com"
             required
           />
-        </label>
-        <label>
-          Password:
+        </div>
+        <div>
+          <label>Password:</label>
           <input
             type="password"
             name="password"
@@ -84,13 +80,13 @@ function Signup() {
             placeholder="********"
             required
           />
-        </label>
-        {passwordError && <div style={{ color: "red" }}>{passwordError}</div>}
+          {passwordError && <div style={{ color: "red" }}>{passwordError}</div>}
+        </div>
         {error && <div style={{ color: "red" }}>{error}</div>}
         <button type="submit">Signup</button>
       </form>
       <p>
-        Already a user - <Link to={"/login"}>Login</Link>
+        Already a user? <Link to="/login">Login</Link>
       </p>
     </div>
   );

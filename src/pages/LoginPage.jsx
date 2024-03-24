@@ -5,9 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState(""); // State to hold login error
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -16,17 +15,15 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    authService
-      .login(formData)
-      .then((response) => {
-        storeToken(response.data.authToken); // Assuming the response includes authToken
-        authenticateUser(); // Update the authentication state
-        navigate("/user-profile"); // Navigate to the profile page after successful login
-      })
-      .catch((err) => {
-        console.error("Login Error:", err);
-        setError("Failed to login. Please check your email and password."); // Provide user feedback
-      });
+    try {
+      const response = await authService.login(formData);
+      storeToken(response.data.authToken);
+      authenticateUser();
+      navigate("/user-profile");
+    } catch (err) {
+      console.error("Login Error:", err);
+      setError("Failed to login. Please check your email and password.");
+    }
   };
 
   return (
@@ -49,9 +46,8 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      <p>
-        Not a user - <Link to={"/signup"}>SignUp</Link>
-      </p>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <p>Not a user? <Link to="/signup">Sign Up</Link></p>
     </div>
   );
 }

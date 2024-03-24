@@ -2,43 +2,36 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import reviewService from "../services/review.service";
 
-function EditReviewPage({ review, isInlineMode, onSave, onCancel }) {
-  // Use useParams and useNavigate only if not in inline mode
-  const { id } = isInlineMode ? { id: review?.id } : useParams();
+function EditReviewPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [reviewData, setReviewData] = useState({
     food: "",
     taste: "",
     digestion: "",
-    rate: "",
+    rate: 1,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!isInlineMode) {
-      // Fetch review data only if in standalone mode
-      reviewService
-        .getReviewById(id)
-        .then((response) => {
-          setReviewData({
-            food: response.data.food,
-            taste: response.data.taste,
-            digestion: response.data.digestion,
-            rate: response.data.rate,
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          setError("Failed to fetch review");
-          setLoading(false);
+    reviewService
+      .getReviewById(id)
+      .then((response) => {
+        // Ensure you only set fields that exist in your model
+        setReviewData({
+          food: response.data.food,
+          taste: response.data.taste,
+          digestion: response.data.digestion,
+          rate: response.data.rate,
         });
-    } else {
-      // If in inline mode, initialize form with passed review data
-      setReviewData(review);
-      setLoading(false);
-    }
-  }, [id, isInlineMode, review]);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError("Failed to fetch review");
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,24 +40,18 @@ function EditReviewPage({ review, isInlineMode, onSave, onCancel }) {
       [name]: value,
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     reviewService
       .updateReview(id, reviewData)
       .then(() => {
-        if (isInlineMode) {
-          onSave && onSave(reviewData);
-        } else {
-          navigate("/foods");
-        }
+        navigate("/reviews");
       })
       .catch((error) => {
         console.error("Failed to update review", error);
         setError("Failed to update review. Please try again.");
       });
   };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
