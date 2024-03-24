@@ -12,9 +12,7 @@ function FoodItemsPage() {
   // Define the fetchDailyStats function inside the component
   async function fetchDailyStats(date) {
     const formattedDate = date.toISOString().split("T")[0];
-    // Assuming your foodService.getDailyStats method internally makes a fetch call to the backend
-    // You can replace it with this direct fetch call or adjust the foodService.getDailyStats method accordingly
-    const response = await fetch(`/api/daily-stats?date=${formattedDate}`);
+    const response = await fetch(`/api/foods/daily-stats?date=${formattedDate}`);
     const data = await response.json();
     return data;
   }

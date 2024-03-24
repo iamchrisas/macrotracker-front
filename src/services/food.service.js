@@ -42,7 +42,7 @@ class FoodService {
   }
   // Method to view daily food stats
   getDailyStats() {
-    return this.api.get("/api/foods/daily-stats");
+    return this.api.get(`/api/foods/daily-stats?date=${date}`);
   }
 }
 
