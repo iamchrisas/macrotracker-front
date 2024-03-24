@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Import all page components
 import HomePage from "./pages/HomePage";
@@ -16,8 +12,6 @@ import FoodItemsPage from "./pages/FoodItemsPage";
 import AddFoodItemPage from "./pages/AddFoodItemPage";
 import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
 import EditFoodItemPage from "./pages/EditFoodItemPage";
-import AddReviewPage from "./pages/AddReviewPage";
-import EditReviewPage from "./pages/EditReviewPage";
 
 function App() {
   return (
@@ -40,10 +34,6 @@ function App() {
           <Route path="/add-food" element={<AddFoodItemPage />} />
           <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
           <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
-
-          {/* Review-related routes */}
-          <Route path="/reviews/add-review" element={<AddReviewPage />} />
-          <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
         </Routes>
       </Router>
     </div>
