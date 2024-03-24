@@ -12,7 +12,9 @@ function FoodItemsPage() {
   // Define the fetchDailyStats function inside the component
   async function fetchDailyStats(date) {
     const formattedDate = date.toISOString().split("T")[0];
-    const response = await fetch(`/api/foods/daily-stats?date=${formattedDate}`);
+    const response = await fetch(
+      `https://macrotracker-back.onrender.com/api/foods/daily-stats?date=${formattedDate}`
+    );
     const data = await response.json();
     return data;
   }
