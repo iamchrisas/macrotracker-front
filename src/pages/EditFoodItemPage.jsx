@@ -10,7 +10,6 @@ function EditFoodItemPage() {
     protein: 0,
     carbs: 0,
     fat: 0,
-    calories: 0,
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -22,26 +21,23 @@ function EditFoodItemPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchFoodItem = async () => {
-      try {
-        const response = await foodService.getFoodItem(id);
-        setFoodItem({
-          ...response.data,
-          calories: calculateCalories(response.data),
+    foodService
+      .getFoodItem(id)
+      .then((response) => {
+        setFoodData({
+          name: response.data.name,
+          protein: response.data.protein,
+          carbs: response.data.carbs,
+          fat: response.data.fat,
         });
-      } catch (error) {
+        setLoading(false);
+      })
+      .catch((error) => {
         console.error("Error fetching food item:", error);
         setError("Failed to fetch food item");
-      } finally {
         setLoading(false);
-      }
-    };
-    fetchFoodItem();
+      });
   }, [id]);
-
-  const calculateCalories = (item) => {
-    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
-  };
 
   const validateField = (name, value) => {
     let msg = "";
@@ -53,56 +49,55 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const newValue = name === "name" ? value : parseFloat(value) || 0;
-    const updatedFoodItem = { ...foodItem, [name]: newValue };
-    if (["protein", "carbs", "fat"].includes(name)) {
-      updatedFoodItem.calories = calculateCalories(updatedFoodItem);
-    }
-    setFoodItem(updatedFoodItem);
-    validateField(name, newValue);
+    setFoodData((prev) => ({
+      ...prev,
+      [name]: parseFloat(value) || 0,
+    }));
+    validateField(name, parseFloat(value));
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const calculateCalories = (item) => {
+    return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (Object.values(validationMsg).some((msg) => msg !== "")) {
+    const hasError = Object.values(validationMsg).some((msg) => msg !== "");
+    if (hasError) {
       alert("Please correct the errors before submitting.");
       return;
     }
-    const formData = new FormData();
-    Object.entries(foodItem).forEach(([key, value]) =>
-      formData.append(key, value)
-    );
-    if (file) {
-      formData.append("image", file);
-    }
 
-    try {
-      await foodService.editFoodItem(id, formData);
-      alert("Food item updated successfully");
-      navigate("/foods");
-    } catch (error) {
-      console.error("Error updating food item:", error);
-      alert("Failed to update food item.");
-    }
+    const updatedFoodData = {
+      ...foodData,
+      calories: calculateCalories(),
+    };
+
+    foodService
+      .editFoodItem(id, updatedFoodData)
+      .then(() => {
+        alert("Food item updated successfully");
+        navigate("/foods");
+      })
+      .catch((error) => {
+        console.error("Error updating food item:", error);
+
+        alert("Failed to update food item.");
+      });
   };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <h2>Edit Meal</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <h2>Edit Food Item</h2>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Name:</label>
           <input
             type="text"
             name="name"
-            value={foodItem.name}
+            value={foodData.name}
             onChange={handleChange}
             required
           />
@@ -112,8 +107,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="protein"
-            value={foodItem.protein}
+            value={foodData.protein}
             onChange={handleChange}
+            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -124,8 +120,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="carbs"
-            value={foodItem.carbs}
+            value={foodData.carbs}
             onChange={handleChange}
+            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -136,8 +133,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="fat"
-            value={foodItem.fat}
+            value={foodData.fat}
             onChange={handleChange}
+            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
@@ -145,7 +143,7 @@ function EditFoodItemPage() {
         </div>
         <div>
           <label>Calories: </label>
-          <span>{foodItem.calories}</span>
+          <span>{calculateCalories()}</span>
         </div>
         <div>
           <label htmlFor="image">Image:</label>
