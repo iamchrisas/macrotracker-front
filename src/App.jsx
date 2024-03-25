@@ -13,7 +13,6 @@ import AddFoodItemPage from "./pages/AddFoodItemPage";
 import FoodItemDetailsPage from "./pages/FoodItemDetailsPage";
 import EditFoodItemPage from "./pages/EditFoodItemPage";
 import AddReviewPage from "./pages/AddReviewPage";
-import EditReviewPage from "./pages/EditReviewPage";
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
 
         {/* Review-related routes */}
         <Route path="/add-review" element={<AddReviewPage />} />
-        <Route path="/reviews/edit-review/:id" element={<EditReviewPage />} />
       </Routes>
     </div>
   );

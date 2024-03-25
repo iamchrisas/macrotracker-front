@@ -32,12 +32,10 @@ function FoodItemDetailsPage() {
 
   const handleReviewButtonClick = () => setSelectedFoodItemForReview(id);
 
-  const handleEdit = (reviewId) => navigate(`/edit-review/${reviewId}`);
-
   const handleDelete = async (reviewId) => {
     try {
       await reviewService.deleteReview(reviewId);
-      setReviews(reviews.filter((review) => review.id !== reviewId));
+      setReviews(reviews.filter((review) => review._id !== reviewId));
     } catch (error) {
       console.error("Failed to delete review", error);
     }
@@ -93,8 +91,7 @@ function FoodItemDetailsPage() {
               <p>Taste: {review.taste}</p>
               <p>Digestion: {review.digestion}</p>
               <p>Rate: {review.rate}</p>
-              <button onClick={() => handleEdit(review.id)}>Edit</button>
-              <button onClick={() => handleDelete(review.id)}>Delete</button>
+              <button onClick={() => handleDelete(review._id)}>Delete</button>
             </div>
           ))
         ) : (
