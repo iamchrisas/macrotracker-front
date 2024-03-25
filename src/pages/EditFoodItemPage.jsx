@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 
 function EditFoodItemPage() {
@@ -24,12 +24,7 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        setFoodData({
-          name: response.data.name,
-          protein: response.data.protein,
-          carbs: response.data.carbs,
-          fat: response.data.fat,
-        });
+        setFoodData(response.data); // Assuming response.data has the structure { name, protein, carbs, fat }
         setLoading(false);
       })
       .catch((error) => {
@@ -81,21 +76,21 @@ function EditFoodItemPage() {
       .editFoodItem(id, updatedFoodData)
       .then(() => {
         alert("Food item updated successfully");
-        navigate("/foods");
+        navigate(-1); // Navigate back
       })
       .catch((error) => {
         console.error("Error updating food item:", error);
-
         alert("Failed to update food item.");
       });
   };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <h2>Edit Food Item</h2>
-      <form onSubmit={handleSubmit}>
+      <h2>Edit Meal</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label>Name:</label>
           <input
@@ -113,9 +108,6 @@ function EditFoodItemPage() {
             value={foodData.protein}
             onChange={handleChange}
           />
-          {validationMsg.protein && (
-            <div style={{ color: "red" }}>{validationMsg.protein}</div>
-          )}
         </div>
         <div>
           <label>Carbs (g):</label>
@@ -125,9 +117,6 @@ function EditFoodItemPage() {
             value={foodData.carbs}
             onChange={handleChange}
           />
-          {validationMsg.carbs && (
-            <div style={{ color: "red" }}>{validationMsg.carbs}</div>
-          )}
         </div>
         <div>
           <label>Fat (g):</label>
@@ -137,13 +126,6 @@ function EditFoodItemPage() {
             value={foodData.fat}
             onChange={handleChange}
           />
-          {validationMsg.fat && (
-            <div style={{ color: "red" }}>{validationMsg.fat}</div>
-          )}
-        </div>
-        <div>
-          <label>Calories: </label>
-          <span>{calculateCalories()}</span>
         </div>
         <div>
           <label htmlFor="image">Image:</label>
@@ -157,9 +139,9 @@ function EditFoodItemPage() {
         <button type="submit" style={{ marginTop: "20px" }}>
           Save
         </button>
-        <div style={{ marginTop: "10px" }}>
-          <button onClick={() => navigate(-1)}>Go back</button>
-        </div>
+        <button onClick={() => navigate(-1)} style={{ marginTop: "10px" }}>
+          Go back
+        </button>
       </form>
     </div>
   );
