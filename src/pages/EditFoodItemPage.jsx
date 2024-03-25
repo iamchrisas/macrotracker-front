@@ -5,7 +5,7 @@ import foodService from "../services/food.service";
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [foodItem, setFoodItem] = useState({
+  const [foodData, setFoodData] = useState({
     name: "",
     protein: 0,
     carbs: 0,
@@ -58,6 +58,10 @@ function EditFoodItemPage() {
 
   const calculateCalories = (item) => {
     return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   const handleSubmit = (e) => {
