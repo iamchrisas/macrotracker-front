@@ -18,7 +18,6 @@ function EditReviewPage() {
     reviewService
       .getReviewById(id)
       .then((response) => {
-        // Ensure you only set fields that exist in your model
         setReviewData({
           food: response.data.food,
           taste: response.data.taste,

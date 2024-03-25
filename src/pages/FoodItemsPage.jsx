@@ -17,19 +17,16 @@ function FoodItemsPage() {
 
   async function fetchDailyStats(date) {
     try {
-      const response = await foodService.getDailyStats(date);
-      const data = await response.json();
-
-      // Validate the structure of `data` or use default values if necessary
+      const data = await foodService.getDailyStats(date);
       if (data && data.totals && data.goals && data.remaining) {
-        setDailyStats(data); // Data is valid
+        setDailyStats(data);
       } else {
-        setDailyStats(defaultDailyStats); // Use default values
+        setDailyStats(defaultDailyStats);
       }
     } catch (error) {
       console.error("Failed to fetch daily stats:", error);
       setError("Failed to fetch daily stats.");
-      setDailyStats(defaultDailyStats); // Use default values in case of error
+      setDailyStats(defaultDailyStats);
     }
   }
 
@@ -37,10 +34,9 @@ function FoodItemsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Assuming there's a method to fetch all food items which is not shown here
         const foodResponse = await foodService.getAllFoodItems();
-        setFoodItems(foodResponse.data); // Adjust according to your actual response structure
-        await fetchDailyStats(currentDate); // Fetch stats for the current date
+        setFoodItems(foodResponse.data);
+        await fetchDailyStats(currentDate);
       } catch (error) {
         console.error("Error:", error);
         setError("Failed to fetch data.");
