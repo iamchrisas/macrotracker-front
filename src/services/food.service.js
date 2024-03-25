@@ -41,8 +41,16 @@ class FoodService {
     return this.api.delete(`/api/foods/delete-food/${id}`);
   }
   // Method to view daily food stats
-  getDailyStats() {
-    return this.api.get(`/api/foods/daily-stats?date=${date}`);
+  async getDailyStats(date) {
+    const formattedDate = date.toISOString().split("T")[0];
+    try {
+      const response = await this.api.get(
+        `/api/foods/daily-stats?date=${formattedDate}`
+      );
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

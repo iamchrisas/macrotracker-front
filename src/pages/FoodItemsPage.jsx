@@ -9,25 +9,38 @@ function FoodItemsPage() {
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Define the fetchDailyStats function inside the component
+  const defaultDailyStats = {
+    totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+    goals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+    remaining: { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  };
+
   async function fetchDailyStats(date) {
-    const formattedDate = date.toISOString().split("T")[0];
-    const response = await fetch(
-      `https://macrotracker-back.onrender.com/api/foods/daily-stats?date=${formattedDate}`
-    );
-    const data = await response.json();
-    return data;
+    try {
+      const response = await foodService.getDailyStats(date);
+      const data = await response.json();
+
+      // Validate the structure of `data` or use default values if necessary
+      if (data && data.totals && data.goals && data.remaining) {
+        setDailyStats(data); // Data is valid
+      } else {
+        setDailyStats(defaultDailyStats); // Use default values
+      }
+    } catch (error) {
+      console.error("Failed to fetch daily stats:", error);
+      setError("Failed to fetch daily stats.");
+      setDailyStats(defaultDailyStats); // Use default values in case of error
+    }
   }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        // Assuming there's a method to fetch all food items which is not shown here
         const foodResponse = await foodService.getAllFoodItems();
-        // Use the fetchDailyStats function to get stats for the current date
-        const statsResponse = await fetchDailyStats(currentDate);
-        setFoodItems(foodResponse.data);
-        setDailyStats(statsResponse); // Adjust according to the expected format
+        setFoodItems(foodResponse.data); // Adjust according to your actual response structure
+        await fetchDailyStats(currentDate); // Fetch stats for the current date
       } catch (error) {
         console.error("Error:", error);
         setError("Failed to fetch data.");
@@ -36,7 +49,7 @@ function FoodItemsPage() {
       }
     };
     fetchData();
-  }, [currentDate]);
+  }, [currentDate]); // Re-fetch when currentDate changes
 
   const formatDate = (date) => {
     const today = new Date();
@@ -92,20 +105,20 @@ function FoodItemsPage() {
       {dailyStats ? (
         <div style={{ display: "flex", textAlign: "center", gap: "0px" }}>
           <p>
-            {dailyStats.totals.calories} / {dailyStats.goals.calories} (
-            {dailyStats.remaining.calories}) 🔥
+            {dailyStats.totals?.calories} / {dailyStats.goals?.calories} (
+            {dailyStats.remaining?.calories}) 🔥
           </p>
           <p>
-            {dailyStats.totals.protein} / {dailyStats.goals.protein} (
-            {dailyStats.remaining.protein}) P
+            {dailyStats.totals?.protein} / {dailyStats.goals?.protein} (
+            {dailyStats.remaining?.protein}) P
           </p>
           <p>
-            {dailyStats.totals.carbs} / {dailyStats.goals.carbs} (
-            {dailyStats.remaining.carbs}) C
+            {dailyStats.totals?.carbs} / {dailyStats.goals?.carbs} (
+            {dailyStats.remaining?.carbs}) C
           </p>
           <p>
-            {dailyStats.totals.fat} / {dailyStats.goals.fat} F (
-            {dailyStats.remaining.fat}) F
+            {dailyStats.totals?.fat} / {dailyStats.goals?.fat} (
+            {dailyStats.remaining?.fat}) F
           </p>
         </div>
       ) : (
