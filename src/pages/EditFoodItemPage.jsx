@@ -41,10 +41,10 @@ function EditFoodItemPage() {
 
   const validateField = (name, value) => {
     let msg = "";
-    if (value < 0) {
+    if (["protein", "carbs", "fat"].includes(name) && value < 0) {
       msg = `${name} must be a positive number.`;
     }
-    setValidationMsg({ ...validationMsg, [name]: msg });
+    setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: msg }));
   };
 
   const handleChange = (e) => {
@@ -56,7 +56,7 @@ function EditFoodItemPage() {
     validateField(name, parseFloat(value));
   };
 
-  const calculateCalories = (item) => {
+  const calculateCalories = () => {
     return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
   };
 
@@ -103,7 +103,6 @@ function EditFoodItemPage() {
             name="name"
             value={foodData.name}
             onChange={handleChange}
-            required
           />
         </div>
         <div>
@@ -113,7 +112,6 @@ function EditFoodItemPage() {
             name="protein"
             value={foodData.protein}
             onChange={handleChange}
-            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -126,7 +124,6 @@ function EditFoodItemPage() {
             name="carbs"
             value={foodData.carbs}
             onChange={handleChange}
-            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -139,7 +136,6 @@ function EditFoodItemPage() {
             name="fat"
             value={foodData.fat}
             onChange={handleChange}
-            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
@@ -162,9 +158,7 @@ function EditFoodItemPage() {
           Save
         </button>
         <div style={{ marginTop: "10px" }}>
-          <Link to="/foods">
-            <button type="button">Go back</button>
-          </Link>
+          <button onClick={() => navigate(-1)}>Go back</button>
         </div>
       </form>
     </div>

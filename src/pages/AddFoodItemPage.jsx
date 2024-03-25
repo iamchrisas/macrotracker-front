@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 
 function AddFoodItemPage() {
@@ -15,6 +15,8 @@ function AddFoodItemPage() {
     carbs: "",
     fat: "",
   });
+
+  const navigate = useNavigate();
 
   const calculateCalories = () => {
     return foodItem.protein * 4 + foodItem.carbs * 4 + foodItem.fat * 9;
@@ -147,12 +149,11 @@ function AddFoodItemPage() {
           Save
         </button>
         <div style={{ marginTop: "10px" }}>
-          <button>
-            <Link to="/foods">Go back</Link>
-          </button>
+          <button onClick={() => navigate(-1)}>Go back</button>
         </div>
       </form>
     </div>
   );
 }
+
 export default AddFoodItemPage;

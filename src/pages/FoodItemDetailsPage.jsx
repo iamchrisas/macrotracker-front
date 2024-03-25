@@ -76,6 +76,7 @@ function FoodItemDetailsPage() {
           />
         )}
       </div>
+      <button onClick={() => navigate(-1)}>Go back</button>
       <button onClick={handleReviewButtonClick}>Rate it</button>
       {selectedFoodItemForReview && (
         <AddReviewPage
