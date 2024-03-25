@@ -2,13 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 
-// Standalone function for calculating calories
-const calculateCalories = (item) => {
-  return item.protein * 4 + item.carbs * 4 + item.fat * 9;
-};
-
 function EditFoodItemPage() {
-  const { _id } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [foodItem, setFoodItem] = useState({
     name: "",
@@ -27,7 +22,7 @@ function EditFoodItemPage() {
 
   useEffect(() => {
     foodService
-      .getFoodItem(_id)
+      .getFoodItem(id)
       .then((response) => {
         setFoodItem({
           ...response.data,
@@ -40,7 +35,11 @@ function EditFoodItemPage() {
         setError("Failed to fetch food item");
         setLoading(false);
       });
-  }, [_id]);
+  }, [id]);
+
+  const calculateCalories = () => {
+    return foodItem.protein * 4 + foodItem.carbs * 4 + foodItem.fat * 9;
+  };
 
   const validateField = (name, value) => {
     const msg = value < 0 ? `${name} must be a positive number.` : "";
@@ -54,11 +53,15 @@ function EditFoodItemPage() {
       const updatedItem = { ...prevItem, [name]: updatedValue };
       if (["protein", "carbs", "fat"].includes(name)) {
         validateField(name, updatedValue);
-        updatedItem.calories = calculateCalories(updatedItem);
       }
       return updatedItem;
     });
   };
+
+  useEffect(() => {
+    // Recalculate calories whenever foodItem changes
+    setFoodItem((prevItem) => ({ ...prevItem, calories: calculateCalories() }));
+  }, [foodItem.protein, foodItem.carbs, foodItem.fat]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -80,9 +83,9 @@ function EditFoodItemPage() {
     }
 
     try {
-      await foodService.editFoodItem(_id, formData);
+      await foodService.editFoodItem(id, formData);
       alert("Food item updated successfully");
-      navigate(-1); 
+      navigate(-1);
     } catch (error) {
       console.error("Error updating food item:", error);
       alert("Failed to update food item.");
@@ -96,7 +99,6 @@ function EditFoodItemPage() {
     <div>
       <h2>Edit Meal</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* Input fields and validation messages similar to AddFoodItemPage */}
         <div>
           <label>Name:</label>
           <input

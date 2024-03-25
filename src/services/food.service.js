@@ -27,13 +27,13 @@ class FoodService {
   }
 
   // Method to get a single food item by id
-  getFoodItem(_id) {
-    return this.api.get(`/api/foods/${_id}`);
+  getFoodItem(id) {
+    return this.api.get(`/api/foods/${id}`);
   }
 
   // Method to edit a food item
-  editFoodItem(_id, foodData) {
-    return this.api.put(`/api/foods/edit-food/${_id}`, foodData);
+  editFoodItem(id, foodData) {
+    return this.api.put(`/api/foods/edit-food/${id}`, foodData);
   }
 
   // Method to delete a food item
