@@ -30,11 +30,6 @@ class ReviewService {
     return this.api.get(`/api/reviews/${id}`);
   }
 
-  // Method to update a review
-  updateReview(id, reviewData) {
-    return this.api.put(`/api/reviews/edit/${id}`, reviewData);
-  }
-
   // Method to delete a review
   deleteReview(id) {
     return this.api.delete(`/api/reviews/delete-review/${id}`);
