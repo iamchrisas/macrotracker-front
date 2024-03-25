@@ -8,7 +8,7 @@ const calculateCalories = (item) => {
 };
 
 function EditFoodItemPage() {
-  const { id } = useParams();
+  const { _id } = useParams();
   const navigate = useNavigate();
   const [foodItem, setFoodItem] = useState({
     name: "",
@@ -27,7 +27,7 @@ function EditFoodItemPage() {
 
   useEffect(() => {
     foodService
-      .getFoodItem(id)
+      .getFoodItem(_id)
       .then((response) => {
         setFoodItem({
           ...response.data,
@@ -40,7 +40,7 @@ function EditFoodItemPage() {
         setError("Failed to fetch food item");
         setLoading(false);
       });
-  }, [id]);
+  }, [_id]);
 
   const validateField = (name, value) => {
     const msg = value < 0 ? `${name} must be a positive number.` : "";
@@ -80,9 +80,9 @@ function EditFoodItemPage() {
     }
 
     try {
-      await foodService.editFoodItem(id, formData);
+      await foodService.editFoodItem(_id, formData);
       alert("Food item updated successfully");
-      navigate(-1); // Navigate back
+      navigate(-1); 
     } catch (error) {
       console.error("Error updating food item:", error);
       alert("Failed to update food item.");
