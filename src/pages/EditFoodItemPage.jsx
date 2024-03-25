@@ -5,26 +5,31 @@ import foodService from "../services/food.service";
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [foodData, setFoodData] = useState({
+  const [foodItem, setFoodItem] = useState({
     name: "",
     protein: 0,
     carbs: 0,
     fat: 0,
+    calories: 0,
   });
   const [file, setFile] = useState(null);
-  const [validationMsg, setValidationMsg] = useState({
-    protein: "",
-    carbs: "",
-    fat: "",
-  });
+  const [validationMsg, setValidationMsg] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Function to calculate calories
+  const calculateCalories = (item) => {
+    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
+  };
 
   useEffect(() => {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        setFoodData(response.data); // Assuming response.data has the structure { name, protein, carbs, fat }
+        setFoodItem({
+          ...response.data,
+          calories: calculateCalories(response.data),
+        });
         setLoading(false);
       })
       .catch((error) => {
@@ -36,7 +41,7 @@ function EditFoodItemPage() {
 
   const validateField = (name, value) => {
     let msg = "";
-    if (["protein", "carbs", "fat"].includes(name) && value < 0) {
+    if (value < 0) {
       msg = `${name} must be a positive number.`;
     }
     setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: msg }));
@@ -44,15 +49,16 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFoodData((prev) => ({
-      ...prev,
-      [name]: parseFloat(value) || 0,
-    }));
-    validateField(name, parseFloat(value));
-  };
-
-  const calculateCalories = () => {
-    return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
+    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
+    const updatedFoodItem = {
+      ...foodItem,
+      [name]: updatedValue,
+    };
+    if (["protein", "carbs", "fat"].includes(name)) {
+      updatedFoodItem.calories = calculateCalories(updatedFoodItem);
+    }
+    setFoodItem(updatedFoodItem);
+    validateField(name, updatedValue);
   };
 
   const handleFileChange = (e) => {
@@ -67,13 +73,16 @@ function EditFoodItemPage() {
       return;
     }
 
-    const updatedFoodData = {
-      ...foodData,
-      calories: calculateCalories(),
-    };
+    const formData = new FormData();
+    Object.entries(foodItem).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    if (file) {
+      formData.append("image", file);
+    }
 
     foodService
-      .editFoodItem(id, updatedFoodData)
+      .editFoodItem(id, formData)
       .then(() => {
         alert("Food item updated successfully");
         navigate(-1); // Navigate back
@@ -83,6 +92,8 @@ function EditFoodItemPage() {
         alert("Failed to update food item.");
       });
   };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -96,7 +107,7 @@ function EditFoodItemPage() {
           <input
             type="text"
             name="name"
-            value={foodData.name}
+            value={foodItem.name}
             onChange={handleChange}
           />
         </div>
@@ -105,7 +116,7 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="protein"
-            value={foodData.protein}
+            value={foodItem.protein}
             onChange={handleChange}
           />
         </div>
@@ -114,7 +125,7 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="carbs"
-            value={foodData.carbs}
+            value={foodItem.carbs}
             onChange={handleChange}
           />
         </div>
@@ -123,9 +134,13 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="fat"
-            value={foodData.fat}
+            value={foodItem.fat}
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <label>Calories: </label>
+          <span>{foodItem.calories}</span>
         </div>
         <div>
           <label htmlFor="image">Image:</label>
