@@ -3,6 +3,7 @@ import foodService from "../services/food.service";
 import { Link } from "react-router-dom";
 
 function FoodItemsPage() {
+  console.log('rendering', dailyStats);
   const [foodItems, setFoodItems] = useState([]);
   const [dailyStats, setDailyStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,8 +76,13 @@ function FoodItemsPage() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  console.log("before return", dailyStats);
   return (
     <div>
+        {(() => {
+      console.log('after return', dailyStats);
+      return null; // IIFE must return something that React can render, null is usually harmless
+    })()}
       <div
         style={{
           display: "flex",
