@@ -30,6 +30,17 @@ function FoodItemDetailsPage() {
     fetchFoodItemDetails();
   }, [id]);
 
+  const handleDeleteFoodItem = async () => {
+    try {
+      await foodService.deleteFoodItem(id);
+      alert("Food item deleted successfully!");
+      navigate("/foods"); // Assuming '/foods' is the path to the list of food items
+    } catch (error) {
+      console.error("Failed to delete food item", error);
+      alert("Failed to delete food item.");
+    }
+  };
+
   const handleReviewButtonClick = () => setSelectedFoodItemForReview(id);
 
   const handleDelete = async (reviewId) => {
@@ -78,6 +89,12 @@ function FoodItemDetailsPage() {
       </div>
       <button onClick={() => navigate(-1)}>Go back</button>
       <button onClick={handleReviewButtonClick}>Rate it</button>
+      <button
+        onClick={handleDeleteFoodItem}
+        style={{ backgroundColor: "red", color: "white" }}
+      >
+        Delete Meal
+      </button>
       {selectedFoodItemForReview && (
         <AddReviewPage
           foodItemId={selectedFoodItemForReview}
@@ -92,7 +109,7 @@ function FoodItemDetailsPage() {
               <p>Taste: {review.taste}</p>
               <p>Digestion: {review.digestion}</p>
               <p>Rate: {review.rate}</p>
-              <button onClick={() => handleDelete(review._id)}>Delete</button>
+              <button onClick={() => handleDelete(review._id)}>Delete Review</button>
             </div>
           ))
         ) : (
