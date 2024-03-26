@@ -59,8 +59,12 @@ function AddFoodItemPage() {
     }
 
     try {
-      await foodService.addFoodItem(formData);
+      const response = await foodService.addFoodItem(formData);
       alert("Food item added successfully!");
+      const addedFoodItemId = response.data.id;
+      navigate(`/foods/${addedFoodItemId}`);
+
+      // Reset form state
       setFoodItem({ name: "", protein: 0, carbs: 0, fat: 0 });
       setFile(null);
       setValidationMsg({ protein: "", carbs: "", fat: "" });

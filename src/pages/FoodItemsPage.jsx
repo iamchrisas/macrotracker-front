@@ -25,7 +25,11 @@ function FoodItemsPage() {
 
   const goToPreviousDay = () =>
     setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 1)));
+
   const goToToday = () => setCurrentDate(new Date());
+
+  const goToNextDay = () =>
+    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 1)));
 
   const filteredItems = foodItems.filter(
     (item) => new Date(item.date).toDateString() === currentDate.toDateString()
@@ -35,17 +39,17 @@ function FoodItemsPage() {
     try {
       // Get the user's current time zone offset in minutes
       const tzOffset = new Date().getTimezoneOffset();
-  
+
       // Adjust the date by the time zone offset to ensure it represents the correct day
       // Note: getTimezoneOffset() returns the difference in minutes, so convert it to milliseconds
       const adjustedDate = new Date(date.getTime() - tzOffset * 60000);
-  
+
       // Now format the adjusted date to an ISO string
       const formattedDate = adjustedDate.toISOString();
-  
+
       // Include both the date and the time zone offset in the request
       const response = await foodService.getDailyStats(formattedDate, tzOffset);
-  
+
       setDailyStats(response.data);
     } catch (error) {
       console.error("Failed to fetch daily stats:", error);
@@ -92,6 +96,7 @@ function FoodItemsPage() {
           {" "}
           <button onClick={goToPreviousDay}>Previous day</button>
           <button onClick={goToToday}>Today</button>
+          <button onClick={goToNextDay}>Next day</button>
           <Link to="/add-food">
             <button>Log meal</button>
           </Link>
