@@ -97,27 +97,25 @@ function FoodItemsPage() {
         </div>
       </div>
       {/* STATS */}
-      {dailyStats ? (
+      {dailyStats && (
         <div style={{ display: "flex", textAlign: "center", gap: "0px" }}>
           <p>
-            {dailyStats.totals?.calories} / {dailyStats.goals?.calories} (
-            {dailyStats.remaining?.calories}) 🔥
+            Calories: {dailyStats.totals.calories} / {dailyStats.goals.calories}{" "}
+            (Remaining: {dailyStats.remaining.calories}) 🔥
           </p>
           <p>
-            {dailyStats.totals?.protein} / {dailyStats.goals?.protein} (
-            {dailyStats.remaining?.protein}) P
+            Protein: {dailyStats.totals.protein} / {dailyStats.goals.protein}{" "}
+            (Remaining: {dailyStats.remaining.protein}) P
           </p>
           <p>
-            {dailyStats.totals?.carbs} / {dailyStats.goals?.carbs} (
-            {dailyStats.remaining?.carbs}) C
+            Carbs: {dailyStats.totals.carbs} / {dailyStats.goals.carbs}{" "}
+            (Remaining: {dailyStats.remaining.carbs}) C
           </p>
           <p>
-            {dailyStats.totals?.fat} / {dailyStats.goals?.fat} (
-            {dailyStats.remaining?.fat}) F
+            Fat: {dailyStats.totals.fat} / {dailyStats.goals.fat} (Remaining:{" "}
+            {dailyStats.remaining.fat}) F
           </p>
         </div>
-      ) : (
-        <p>No stats available for this day.</p>
       )}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <ul style={{ listStyle: "none", padding: 10 }}>
