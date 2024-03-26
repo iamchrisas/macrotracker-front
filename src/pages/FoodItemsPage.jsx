@@ -9,7 +9,6 @@ function FoodItemsPage() {
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-
   const formatDate = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -38,12 +37,12 @@ function FoodItemsPage() {
     (item) => new Date(item.date).toDateString() === currentDate.toDateString()
   );
 
-
   async function fetchDailyStats(date) {
     try {
-      const data = await foodService.getDailyStats(date);
-      console.log(data);
-      setDailyStats(data);
+      const response = await foodService.getDailyStats(date);
+      console.log(response);
+      // AExtract the `data` property from the response
+      setDailyStats(response.data);
     } catch (error) {
       console.error("Failed to fetch daily stats:", error);
     }
@@ -51,7 +50,7 @@ function FoodItemsPage() {
 
   useEffect(() => {
     let isMounted = true; // Flag to track mount status
-  
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -65,9 +64,9 @@ function FoodItemsPage() {
         if (isMounted) setLoading(false);
       }
     };
-  
+
     fetchData();
-  
+
     // Cleanup function to set isMounted to false when component unmounts
     return () => {
       isMounted = false;
@@ -80,7 +79,6 @@ function FoodItemsPage() {
   console.log("before return", dailyStats);
   return (
     <div>
-        {dailyStats && <pre>{JSON.stringify(dailyStats, null, 2)}</pre>}
       <div
         style={{
           display: "flex",
