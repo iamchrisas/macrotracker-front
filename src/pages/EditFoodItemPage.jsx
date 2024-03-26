@@ -20,8 +20,12 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
+        const { protein, carbs, fat, ...rest } = response.data;
         setFoodItem({
-          ...response.data,
+          ...rest,
+          protein: parseFloat(protein),
+          carbs: parseFloat(carbs),
+          fat: parseFloat(fat),
           calories: calculateCalories(response.data),
         });
       })
@@ -32,9 +36,6 @@ function EditFoodItemPage() {
 
   console.log(foodItem);
 
-  const calculateCalories = (item) => {
-    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
-  };
 
   /* const validateField = (name, value) => {
     if (value < 0) {
@@ -48,21 +49,18 @@ function EditFoodItemPage() {
     return true;
   };*/
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFoodItem((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const calculateCalories = (item) => {
+    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
   };
 
-  /* const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFoodItem((prevState) => ({
-      ...prevState,
-      [name]: name === "name" ? value : parseFloat(value) || "",
-    }));
-  };*/
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  const parsedValue = name === 'protein' || name === 'carbs' || name === 'fat' ? parseFloat(value) || 0 : value;
+  setFoodItem((prevState) => ({
+    ...prevState,
+    [name]: parsedValue,
+  }));
+};
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -83,6 +81,7 @@ function EditFoodItemPage() {
       formData.append("image", file);
     }
 
+    
     foodService
       .editFoodItem(id, formData)
       .then(() => {
