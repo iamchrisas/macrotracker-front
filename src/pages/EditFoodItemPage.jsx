@@ -18,6 +18,7 @@ function EditFoodItemPage() {
     fat: "",
   });
 
+  const [changedFields, setChangedFields] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -52,19 +53,23 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedFoodItem = {
-      ...foodItem,
-      [name]: name === "name" ? value : parseFloat(value) || 0,
-    };
+    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
+    const updatedFoodItem = { ...foodItem, [name]: updatedValue };
+
     if (["protein", "carbs", "fat"].includes(name)) {
       updatedFoodItem.calories = calculateCalories(updatedFoodItem);
+      setChangedFields({ ...changedFields, [name]: true, calories: true });
+    } else {
+      setChangedFields({ ...changedFields, [name]: true });
     }
+
     setFoodItem(updatedFoodItem);
-    validateField(name, parseFloat(value));
+    validateField(name, updatedValue);
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+    setChangedFields({ ...changedFields, image: true });
   };
 
   const handleSubmit = (e) => {
@@ -76,17 +81,13 @@ function EditFoodItemPage() {
     }
 
     const formData = new FormData();
-    formData.append("name", foodItem.name);
-    formData.append("protein", foodItem.protein);
-    formData.append("carbs", foodItem.carbs);
-    formData.append("fat", foodItem.fat);
-    // Calculate calories before appending it to formData
-    const calories = calculateCalories(foodItem);
-    formData.append("calories", calories); // Append calculated calories
-
-    if (file) {
-      formData.append("image", file);
-    }
+    Object.keys(changedFields).forEach((field) => {
+      if (field === "image" && file) {
+        formData.append("image", file);
+      } else if (field !== "image") {
+        formData.append(field, foodItem[field]);
+      }
+    });
 
     foodService
       .editFoodItem(id, formData)
