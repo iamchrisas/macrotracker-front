@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import foodService from "../services/food.service";
 
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [foodData, setFoodData] = useState({
+  const [foodItem, setFoodItem] = useState({
     name: "",
     protein: 0,
     carbs: 0,
     fat: 0,
   });
+  const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
     protein: "",
     carbs: "",
     fat: "",
   });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -23,11 +25,9 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        setFoodData({
-          name: response.data.name,
-          protein: response.data.protein,
-          carbs: response.data.carbs,
-          fat: response.data.fat,
+        setFoodItem({
+          ...response.data,
+          calories: calculateCalories(response.data),
         });
         setLoading(false);
       })
@@ -38,6 +38,10 @@ function EditFoodItemPage() {
       });
   }, [id]);
 
+  // Function to calculate calories
+  const calculateCalories = (item) => {
+    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
+  };
   const validateField = (name, value) => {
     let msg = "";
     if (value < 0) {
@@ -48,15 +52,19 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFoodData((prev) => ({
-      ...prev,
-      [name]: parseFloat(value) || 0,
-    }));
+    const updatedFoodItem = {
+      ...foodItem,
+      [name]: name === "name" ? value : parseFloat(value) || 0,
+    };
+    if (["protein", "carbs", "fat"].includes(name)) {
+      updatedFoodItem.calories = calculateCalories(updatedFoodItem);
+    }
+    setFoodItem(updatedFoodItem);
     validateField(name, parseFloat(value));
   };
 
-  const calculateCalories = () => {
-    return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   const handleSubmit = (e) => {
@@ -67,13 +75,17 @@ function EditFoodItemPage() {
       return;
     }
 
-    const updatedFoodData = {
-      ...foodData,
-      calories: calculateCalories(), // Calculate calories based on macros
-    };
+    const formData = new FormData();
+    formData.append("name", foodItem.name);
+    formData.append("protein", foodItem.protein);
+    formData.append("carbs", foodItem.carbs);
+    formData.append("fat", foodItem.fat);
+    if (file) {
+      formData.append("image", file);
+    }
 
     foodService
-      .editFoodItem(id, updatedFoodData)
+      .editFoodItem(id, formData)
       .then(() => {
         alert("Food item updated successfully");
         navigate(`/foods/${id}`);
@@ -89,17 +101,16 @@ function EditFoodItemPage() {
 
   return (
     <div>
-      <h2>Edit Food Item</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Form fields for name, protein, carbs, and fat */}
+      <h2>Edit Meal</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label>Name:</label>
           <input
             type="text"
             name="name"
-            value={foodData.name}
+            value={foodItem.name}
             onChange={handleChange}
-
+            required
           />
         </div>
         <div>
@@ -107,9 +118,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="protein"
-            value={foodData.protein}
+            value={foodItem.protein}
             onChange={handleChange}
-
+            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -120,9 +131,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="carbs"
-            value={foodData.carbs}
+            value={foodItem.carbs}
             onChange={handleChange}
-
+            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -133,9 +144,9 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="fat"
-            value={foodData.fat}
+            value={foodItem.fat}
             onChange={handleChange}
-
+            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
@@ -143,9 +154,20 @@ function EditFoodItemPage() {
         </div>
         <div>
           <label>Calories: </label>
-          <span>{calculateCalories()}</span>
+          <span>{foodItem.calories}</span>{" "}
         </div>
-        <button type="submit">Save</button>
+        <div>
+          <label htmlFor="image">Image:</label>
+          <input
+            id="image"
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
+        <button type="submit" style={{ marginTop: "20px" }}>
+          Save
+        </button>
       </form>
       <button onClick={() => navigate(-1)} style={{ marginTop: "10px" }}>
         Go back
@@ -153,5 +175,4 @@ function EditFoodItemPage() {
     </div>
   );
 }
-
 export default EditFoodItemPage;
