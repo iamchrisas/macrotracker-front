@@ -12,11 +12,7 @@ function EditFoodItemPage() {
     fat: 0,
   });
   const [file, setFile] = useState(null);
-  const [validationMsg, setValidationMsg] = useState({
-    protein: "",
-    carbs: "",
-    fat: "",
-  });
+  const [validationMsg, setValidationMsg] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -37,31 +33,37 @@ function EditFoodItemPage() {
       });
   }, [id]);
 
-  const calculateCalories = () => {
-    return foodItem.protein * 4 + foodItem.carbs * 4 + foodItem.fat * 9;
+  const calculateCalories = (item) => {
+    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
   };
 
   const validateField = (name, value) => {
-    const msg = value < 0 ? `${name} must be a positive number.` : "";
-    setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: msg }));
+    if (value < 0) {
+      setValidationMsg((prevMsg) => ({
+        ...prevMsg,
+        [name]: `${name} must be a positive number.`,
+      }));
+      return false;
+    }
+    setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: "" }));
+    return true;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFoodItem((prevItem) => {
-      const updatedValue = name === "name" ? value : parseFloat(value) || 0;
-      const updatedItem = { ...prevItem, [name]: updatedValue };
-      if (["protein", "carbs", "fat"].includes(name)) {
-        validateField(name, updatedValue);
-      }
-      return updatedItem;
-    });
-  };
+    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
+    if (!validateField(name, updatedValue)) return;
 
-  useEffect(() => {
-    // Recalculate calories whenever foodItem changes
-    setFoodItem((prevItem) => ({ ...prevItem, calories: calculateCalories() }));
-  }, [foodItem.protein, foodItem.carbs, foodItem.fat]);
+    setFoodItem((prevState) => ({
+      ...prevState,
+      [name]: updatedValue,
+      ...(name === "protein" || name === "carbs" || name === "fat"
+        ? {
+            calories: calculateCalories({ ...prevState, [name]: updatedValue }),
+          }
+        : {}),
+    }));
+  };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -85,7 +87,7 @@ function EditFoodItemPage() {
     try {
       await foodService.editFoodItem(id, formData);
       alert("Food item updated successfully");
-      navigate(-1);
+      navigate(`/foods/${id}`);
     } catch (error) {
       console.error("Error updating food item:", error);
       alert("Failed to update food item.");
