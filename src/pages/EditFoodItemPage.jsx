@@ -7,9 +7,9 @@ function EditFoodItemPage() {
   const navigate = useNavigate();
   const [foodItem, setFoodItem] = useState({
     name: "",
-    protein: "",
-    carbs: "",
-    fat: "",
+    protein: 0,
+    carbs: 0,
+    fat: 0,
   });
 
   const [file, setFile] = useState(null); // For file uploads
@@ -101,7 +101,11 @@ function EditFoodItemPage() {
   return (
     <div>
       <h2>Edit Meal</h2>
-      <form key={foodItem.id} onSubmit={handleSubmit} encType="multipart/form-data">
+      <form
+        key={foodItem.id}
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <div>
           <label>Name:</label>
           <input
@@ -140,6 +144,10 @@ function EditFoodItemPage() {
           />
         </div>
         <div>
+          <label>Calories: </label>
+          <span>{calculateCalories(foodItem)}</span>
+        </div>
+        <div>
           <label htmlFor="image">Image:</label>
           <input
             id="image"
@@ -152,10 +160,6 @@ function EditFoodItemPage() {
           Save
         </button>
       </form>
-      <div>
-        <label>Calories: </label>
-        <span>{calculateCalories(foodItem)}</span>
-      </div>
       <button onClick={() => navigate(-1)} style={{ marginTop: "10px" }}>
         Go back
       </button>
