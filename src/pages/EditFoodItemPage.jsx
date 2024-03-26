@@ -13,9 +13,8 @@ function EditFoodItemPage() {
   });
 
   const [file, setFile] = useState(null); // For file uploads
-/*  const [loading, setLoading] = useState(false);
+  /*  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); */
-
 
   useEffect(() => {
     foodService
@@ -30,6 +29,8 @@ function EditFoodItemPage() {
         console.error("Error fetching food item:", error);
       });
   }, [id]);
+
+  console.log(foodItem);
 
   const calculateCalories = (item) => {
     return item.protein * 4 + item.carbs * 4 + item.fat * 9;
@@ -55,7 +56,7 @@ function EditFoodItemPage() {
     }));
   };
 
- /* const handleChange = (e) => {
+  /* const handleChange = (e) => {
     const { name, value } = e.target;
     setFoodItem((prevState) => ({
       ...prevState,
@@ -69,11 +70,11 @@ function EditFoodItemPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   /* if (Object.values(validationMsg).some((msg) => msg !== "")) {
+    /* if (Object.values(validationMsg).some((msg) => msg !== "")) {
       alert("Please correct the errors before submitting.");
       return;
     }*/
-  
+
     const formData = new FormData();
     Object.entries(foodItem).forEach(([key, value]) => {
       formData.append(key, value);
@@ -81,8 +82,9 @@ function EditFoodItemPage() {
     if (file) {
       formData.append("image", file);
     }
-  
-    foodService.editFoodItem(id, formData)
+
+    foodService
+      .editFoodItem(id, formData)
       .then(() => {
         alert("Food item updated successfully");
         navigate(`/foods/${id}`);
@@ -93,19 +95,19 @@ function EditFoodItemPage() {
       });
   };
 
- /* if (loading) return <div>Loading...</div>;
+  /* if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;*/
 
   return (
     <div>
       <h2>Edit Meal</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form key={foodItem.id} onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label>Name:</label>
           <input
             type="text"
             name="name"
-            value={foodItem.name}
+            value={foodItem.name || ""}
             onChange={handleChange}
             required
           />
@@ -115,34 +117,27 @@ function EditFoodItemPage() {
           <input
             type="number"
             name="protein"
-            value={foodItem.protein}
+            value={foodItem.protein || ""}
             onChange={handleChange}
           />
-  
         </div>
         <div>
           <label>Carbs (g):</label>
           <input
             type="number"
             name="carbs"
-            value={foodItem.carbs}
+            value={foodItem.carbs || ""}
             onChange={handleChange}
           />
-       
         </div>
         <div>
           <label>Fat (g):</label>
           <input
             type="number"
             name="fat"
-            value={foodItem.fat}
+            value={foodItem.fat || ""}
             onChange={handleChange}
           />
-       
-        </div>
-        <div>
-          <label>Calories: </label>
-          <span>{calculateCalories(foodItem)}</span>
         </div>
         <div>
           <label htmlFor="image">Image:</label>
@@ -157,6 +152,10 @@ function EditFoodItemPage() {
           Save
         </button>
       </form>
+      <div>
+        <label>Calories: </label>
+        <span>{calculateCalories(foodItem)}</span>
+      </div>
       <button onClick={() => navigate(-1)} style={{ marginTop: "10px" }}>
         Go back
       </button>
