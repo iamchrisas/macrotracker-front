@@ -58,7 +58,6 @@ function FoodItemsPage() {
         const foodResponse = await foodService.getAllFoodItems();
         if (isMounted) setFoodItems(foodResponse.data);
         await fetchDailyStats(currentDate);
-        if (isMounted) setDailyStats(data);
       } catch (error) {
         console.error("Error:", error);
         if (isMounted) setError("Failed to fetch data.");
