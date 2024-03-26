@@ -40,12 +40,16 @@ class FoodService {
   deleteFoodItem(id) {
     return this.api.delete(`/api/foods/delete-food/${id}`);
   }
+
   // Method to view daily food stats
   async getDailyStats(date) {
     const formattedDate = date.toISOString().split("T")[0];
+    // Get the client's time zone offset in minutes
+    const tzOffset = new Date().getTimezoneOffset();
+
     try {
       const response = await this.api.get(
-        `/api/foods/daily-stats?date=${formattedDate}`
+        `/api/foods/daily-stats?date=${formattedDate}&tzOffset=${tzOffset}`
       );
       return response;
     } catch (error) {

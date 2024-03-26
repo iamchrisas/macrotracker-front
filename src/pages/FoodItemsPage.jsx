@@ -12,14 +12,8 @@ function FoodItemsPage() {
   const formatDate = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
     if (date.setHours(0, 0, 0, 0) === today.getTime()) {
       return "Today";
-    } else if (date.setHours(0, 0, 0, 0) === yesterday.getTime()) {
-      return "Yesterday";
     } else {
       return date.toLocaleDateString("en-EN", {
         weekday: "long",
@@ -39,9 +33,16 @@ function FoodItemsPage() {
 
   async function fetchDailyStats(date) {
     try {
-      const response = await foodService.getDailyStats(date);
-      console.log(response);
-      // AExtract the `data` property from the response
+      // Format the date as an ISO string
+      const formattedDate = date.toISOString();
+  
+      // Get the client's time zone offset in minutes
+      // For simplicity, we're using the time zone offset here
+      const tzOffset = new Date().getTimezoneOffset();
+  
+      // Include both the date and the time zone offset in the request
+      const response = await foodService.getDailyStats(formattedDate, tzOffset);
+  
       setDailyStats(response.data);
     } catch (error) {
       console.error("Failed to fetch daily stats:", error);
@@ -64,9 +65,7 @@ function FoodItemsPage() {
         if (isMounted) setLoading(false);
       }
     };
-
     fetchData();
-
     // Cleanup function to set isMounted to false when component unmounts
     return () => {
       isMounted = false;
@@ -76,7 +75,6 @@ function FoodItemsPage() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  console.log("before return", dailyStats);
   return (
     <div>
       <div
