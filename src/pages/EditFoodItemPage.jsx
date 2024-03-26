@@ -5,85 +5,75 @@ import foodService from "../services/food.service";
 function EditFoodItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [foodItem, setFoodItem] = useState({
+  const [foodData, setFoodData] = useState({
     name: "",
     protein: 0,
     carbs: 0,
     fat: 0,
   });
-
-  const [file, setFile] = useState(null); // For file uploads
-  /*  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(""); */
+  const [validationMsg, setValidationMsg] = useState({
+    protein: "",
+    carbs: "",
+    fat: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        const { protein, carbs, fat, ...rest } = response.data;
-        setFoodItem({
-          ...rest,
-          protein: parseFloat(protein),
-          carbs: parseFloat(carbs),
-          fat: parseFloat(fat),
-          calories: calculateCalories(response.data),
+        setFoodData({
+          name: response.data.name,
+          protein: response.data.protein,
+          carbs: response.data.carbs,
+          fat: response.data.fat,
         });
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching food item:", error);
+        setError("Failed to fetch food item");
+        setLoading(false);
       });
   }, [id]);
 
-  console.log(foodItem);
-
-
-  /* const validateField = (name, value) => {
+  const validateField = (name, value) => {
+    let msg = "";
     if (value < 0) {
-      setValidationMsg((prevMsg) => ({
-        ...prevMsg,
-        [name]: `${name} must be a positive number.`,
-      }));
-      return false;
+      msg = `${name} must be a positive number.`;
     }
-    setValidationMsg((prevMsg) => ({ ...prevMsg, [name]: "" }));
-    return true;
-  };*/
-
-  const calculateCalories = (item) => {
-    return item.protein * 4 + item.carbs * 4 + item.fat * 9;
+    setValidationMsg({ ...validationMsg, [name]: msg });
   };
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  const parsedValue = name === 'protein' || name === 'carbs' || name === 'fat' ? parseFloat(value) || 0 : value;
-  setFoodItem((prevState) => ({
-    ...prevState,
-    [name]: parsedValue,
-  }));
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFoodData((prev) => ({
+      ...prev,
+      [name]: parseFloat(value) || 0,
+    }));
+    validateField(name, parseFloat(value));
+  };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const calculateCalories = () => {
+    return foodData.protein * 4 + foodData.carbs * 4 + foodData.fat * 9;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    /* if (Object.values(validationMsg).some((msg) => msg !== "")) {
+    const hasError = Object.values(validationMsg).some((msg) => msg !== "");
+    if (hasError) {
       alert("Please correct the errors before submitting.");
       return;
-    }*/
-
-    const formData = new FormData();
-    Object.entries(foodItem).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    if (file) {
-      formData.append("image", file);
     }
 
-    
+    const updatedFoodData = {
+      ...foodData,
+      calories: calculateCalories(), // Calculate calories based on macros
+    };
+
     foodService
-      .editFoodItem(id, formData)
+      .editFoodItem(id, updatedFoodData)
       .then(() => {
         alert("Food item updated successfully");
         navigate(`/foods/${id}`);
@@ -94,25 +84,22 @@ const handleChange = (e) => {
       });
   };
 
-  /* if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;*/
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <h2>Edit Meal</h2>
-      <form
-        key={foodItem.id}
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-      >
+      <h2>Edit Food Item</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Form fields for name, protein, carbs, and fat */}
         <div>
           <label>Name:</label>
           <input
             type="text"
             name="name"
-            value={foodItem.name || ""}
+            value={foodData.name}
             onChange={handleChange}
-            required
+
           />
         </div>
         <div>
@@ -120,44 +107,45 @@ const handleChange = (e) => {
           <input
             type="number"
             name="protein"
-            value={foodItem.protein || ""}
+            value={foodData.protein}
             onChange={handleChange}
+
           />
+          {validationMsg.protein && (
+            <div style={{ color: "red" }}>{validationMsg.protein}</div>
+          )}
         </div>
         <div>
           <label>Carbs (g):</label>
           <input
             type="number"
             name="carbs"
-            value={foodItem.carbs || ""}
+            value={foodData.carbs}
             onChange={handleChange}
+
           />
+          {validationMsg.carbs && (
+            <div style={{ color: "red" }}>{validationMsg.carbs}</div>
+          )}
         </div>
         <div>
           <label>Fat (g):</label>
           <input
             type="number"
             name="fat"
-            value={foodItem.fat || ""}
+            value={foodData.fat}
             onChange={handleChange}
+
           />
+          {validationMsg.fat && (
+            <div style={{ color: "red" }}>{validationMsg.fat}</div>
+          )}
         </div>
         <div>
           <label>Calories: </label>
-          <span>{calculateCalories(foodItem)}</span>
+          <span>{calculateCalories()}</span>
         </div>
-        <div>
-          <label htmlFor="image">Image:</label>
-          <input
-            id="image"
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-        </div>
-        <button type="submit" style={{ marginTop: "20px" }}>
-          Save
-        </button>
+        <button type="submit">Save</button>
       </form>
       <button onClick={() => navigate(-1)} style={{ marginTop: "10px" }}>
         Go back
