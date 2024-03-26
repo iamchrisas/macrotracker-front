@@ -61,7 +61,7 @@ function AddFoodItemPage() {
     try {
       const response = await foodService.addFoodItem(formData);
       alert("Food item added successfully!");
-      const addedFoodItemId = response.data.id;
+      const addedFoodItemId = response.data._id;
       navigate(`/foods/${addedFoodItemId}`);
 
       // Reset form state
