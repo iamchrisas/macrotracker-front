@@ -42,20 +42,21 @@ class FoodService {
   }
 
   // Method to view daily food stats
-  async getDailyStats(date) {
-    const formattedDate = date.toISOString().split("T")[0];
-    // Get the client's time zone offset in minutes
-    const tzOffset = new Date().getTimezoneOffset();
-
-    try {
-      const response = await this.api.get(
-        `/api/foods/daily-stats?date=${formattedDate}&tzOffset=${tzOffset}`
-      );
-      return response;
-    } catch (error) {
-      throw error;
-    }
+async getDailyStats(date) {
+  // Ensure 'date' is a Date object
+  const dateObj = date instanceof Date ? date : new Date(date);
+  const formattedDate = dateObj.toISOString().split("T")[0];
+  const tzOffset = new Date().getTimezoneOffset();
+  
+  try {
+    const response = await this.api.get(
+      `/api/foods/daily-stats?date=${formattedDate}&tzOffset=${tzOffset}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
   }
+}
 }
 
 const foodService = new FoodService();
