@@ -80,6 +80,10 @@ function EditFoodItemPage() {
     formData.append("protein", foodItem.protein);
     formData.append("carbs", foodItem.carbs);
     formData.append("fat", foodItem.fat);
+    // Calculate calories before appending it to formData
+    const calories = calculateCalories(foodItem);
+    formData.append("calories", calories); // Append calculated calories
+
     if (file) {
       formData.append("image", file);
     }
