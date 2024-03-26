@@ -18,11 +18,8 @@ function FoodItemsPage() {
   async function fetchDailyStats(date) {
     try {
       const data = await foodService.getDailyStats(date);
-      if (data && data.totals && data.goals && data.remaining) {
-        setDailyStats(data);
-      } else {
-        setDailyStats(defaultDailyStats);
-      }
+      console.log(data);
+      setDailyStats(data);
     } catch (error) {
       console.error("Failed to fetch daily stats:", error);
       setError("Failed to fetch daily stats.");

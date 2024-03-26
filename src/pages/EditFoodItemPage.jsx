@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 
 function EditFoodItemPage() {
@@ -110,7 +110,6 @@ function EditFoodItemPage() {
             name="name"
             value={foodItem.name}
             onChange={handleChange}
-            required
           />
         </div>
         <div>
@@ -120,7 +119,6 @@ function EditFoodItemPage() {
             name="protein"
             value={foodItem.protein}
             onChange={handleChange}
-            required
           />
           {validationMsg.protein && (
             <div style={{ color: "red" }}>{validationMsg.protein}</div>
@@ -133,7 +131,6 @@ function EditFoodItemPage() {
             name="carbs"
             value={foodItem.carbs}
             onChange={handleChange}
-            required
           />
           {validationMsg.carbs && (
             <div style={{ color: "red" }}>{validationMsg.carbs}</div>
@@ -146,7 +143,6 @@ function EditFoodItemPage() {
             name="fat"
             value={foodItem.fat}
             onChange={handleChange}
-            required
           />
           {validationMsg.fat && (
             <div style={{ color: "red" }}>{validationMsg.fat}</div>
