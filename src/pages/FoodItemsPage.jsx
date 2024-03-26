@@ -33,12 +33,15 @@ function FoodItemsPage() {
 
   async function fetchDailyStats(date) {
     try {
-      // Format the date as an ISO string
-      const formattedDate = date.toISOString();
-  
-      // Get the client's time zone offset in minutes
-      // For simplicity, we're using the time zone offset here
+      // Get the user's current time zone offset in minutes
       const tzOffset = new Date().getTimezoneOffset();
+  
+      // Adjust the date by the time zone offset to ensure it represents the correct day
+      // Note: getTimezoneOffset() returns the difference in minutes, so convert it to milliseconds
+      const adjustedDate = new Date(date.getTime() - tzOffset * 60000);
+  
+      // Now format the adjusted date to an ISO string
+      const formattedDate = adjustedDate.toISOString();
   
       // Include both the date and the time zone offset in the request
       const response = await foodService.getDailyStats(formattedDate, tzOffset);
