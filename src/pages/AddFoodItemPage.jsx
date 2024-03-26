@@ -48,7 +48,6 @@ function AddFoodItemPage() {
       alert("Please correct the errors before submitting.");
       return;
     }
-
     const formData = new FormData();
     Object.entries(foodItem).forEach(([key, value]) =>
       formData.append(key, value)
@@ -57,14 +56,9 @@ function AddFoodItemPage() {
     if (file) {
       formData.append("image", file);
     }
-
     try {
-      const response = await foodService.addFoodItem(formData);
+      await foodService.addFoodItem(formData);
       alert("Food item added successfully!");
-      const addedFoodItemId = response.data._id;
-      navigate(`/foods/${addedFoodItemId}`);
-
-      // Reset form state
       setFoodItem({ name: "", protein: 0, carbs: 0, fat: 0 });
       setFile(null);
       setValidationMsg({ protein: "", carbs: "", fat: "" });
