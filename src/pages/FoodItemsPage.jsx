@@ -9,40 +9,6 @@ function FoodItemsPage() {
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const defaultDailyStats = {
-    totals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
-    goals: { calories: 0, protein: 0, carbs: 0, fat: 0 },
-    remaining: { calories: 0, protein: 0, carbs: 0, fat: 0 },
-  };
-
-  async function fetchDailyStats(date) {
-    try {
-      const data = await foodService.getDailyStats(date);
-      console.log(data);
-      setDailyStats(data);
-    } catch (error) {
-      console.error("Failed to fetch daily stats:", error);
-      setError("Failed to fetch daily stats.");
-      setDailyStats(defaultDailyStats);
-    }
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const foodResponse = await foodService.getAllFoodItems();
-        setFoodItems(foodResponse.data);
-        await fetchDailyStats(currentDate);
-      } catch (error) {
-        console.error("Error:", error);
-        setError("Failed to fetch data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [currentDate]); 
 
   const formatDate = (date) => {
     const today = new Date();
@@ -72,12 +38,50 @@ function FoodItemsPage() {
     (item) => new Date(item.date).toDateString() === currentDate.toDateString()
   );
 
+
+  async function fetchDailyStats(date) {
+    try {
+      const data = await foodService.getDailyStats(date);
+      console.log(data);
+      setDailyStats(data);
+    } catch (error) {
+      console.error("Failed to fetch daily stats:", error);
+    }
+  }
+
+  useEffect(() => {
+    let isMounted = true; // Flag to track mount status
+  
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const foodResponse = await foodService.getAllFoodItems();
+        if (isMounted) setFoodItems(foodResponse.data);
+        await fetchDailyStats(currentDate);
+        if (isMounted) setDailyStats(data);
+      } catch (error) {
+        console.error("Error:", error);
+        if (isMounted) setError("Failed to fetch data.");
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+  
+    fetchData();
+  
+    // Cleanup function to set isMounted to false when component unmounts
+    return () => {
+      isMounted = false;
+    };
+  }, [currentDate]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   console.log("before return", dailyStats);
   return (
     <div>
+        {dailyStats && <pre>{JSON.stringify(dailyStats, null, 2)}</pre>}
       <div
         style={{
           display: "flex",
