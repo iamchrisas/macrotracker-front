@@ -8,6 +8,7 @@ function AddFoodItemPage() {
     protein: 0,
     carbs: 0,
     fat: 0,
+    date: new Date().toISOString().slice(0, 16), // Slices the ISO string to the 'YYYY-MM-DDTHH:MM' format
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -31,7 +32,12 @@ function AddFoodItemPage() {
     const { name, value } = e.target;
     setFoodItem((prevItem) => ({
       ...prevItem,
-      [name]: name === "name" ? value : parseFloat(value) || 0,
+      [name]:
+        name === "name"
+          ? value
+          : name === "date"
+          ? value
+          : parseFloat(value) || 0,
     }));
     if (["protein", "carbs", "fat"].includes(name)) {
       validateField(name, parseFloat(value));
@@ -133,7 +139,14 @@ function AddFoodItemPage() {
           <label>Calories:</label>
           <span>{calculateCalories()}</span>
         </div>
-
+        <div>
+          <input
+            type="datetime-local"
+            name="date"
+            value={foodItem.date}
+            onChange={handleChange}
+          />
+        </div>
         <div style={{ marginBottom: "20px" }}>
           <label htmlFor="image">Image:</label>
           <input

@@ -10,6 +10,7 @@ function EditFoodItemPage() {
     protein: 0,
     carbs: 0,
     fat: 0,
+    date: "",
   });
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
@@ -26,9 +27,11 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
+        console.log(response.data);
         setFoodItem({
-          ...response.data,
-          calories: calculateCalories(response.data),
+          ...response.data.foodItem,
+          calories: calculateCalories(response.data.foodItem),
+          date: response.data.foodItem.date.slice(0, 16), // Format the date for datetime-local input if necessary
         });
         setLoading(false);
       })
@@ -53,7 +56,12 @@ function EditFoodItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedValue = name === "name" ? value : parseFloat(value) || 0;
+    const updatedValue =
+      name === "name"
+        ? value
+        : name === "date"
+        ? value
+        : parseFloat(value) || 0;
     const updatedFoodItem = { ...foodItem, [name]: updatedValue };
 
     if (["protein", "carbs", "fat"].includes(name)) {
@@ -156,6 +164,15 @@ function EditFoodItemPage() {
         <div>
           <label>Calories: </label>
           <span>{foodItem.calories}</span>{" "}
+        </div>
+        <div>
+          <label>Date and Time:</label>
+          <input
+            type="datetime-local"
+            name="date"
+            value={foodItem.date.slice(0, 16)} // Slice to fit the datetime-local format if necessary
+            onChange={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="image">Image:</label>
