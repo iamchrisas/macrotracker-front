@@ -27,7 +27,6 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
-        console.log(response.data);
         setFoodItem({
           ...response.data.foodItem,
           calories: calculateCalories(response.data.foodItem),
