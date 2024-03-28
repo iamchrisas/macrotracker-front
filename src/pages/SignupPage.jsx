@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import authService from "../services/auth.service";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -44,48 +44,59 @@ function Signup() {
   };
 
   return (
-    <div>
-      <h3>Signup</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="John Doe"
-            required
-          />
+    <div className="flex flex-col items-center justify-center my-5">
+      <h3 className="text-center">Signup</h3>
+      <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="John Doe"
+              required
+            />
+          </label>
         </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="e.g. john@domain.com"
-            required
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="e.g. john@domain.com"
+              required
+            />
+          </label>
         </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="********"
-            required
-          />
-          {passwordError && <div style={{ color: "red" }}>{passwordError}</div>}
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="********"
+              required
+            />
+          </label>
+          {passwordError && <div className="text-red-500">{passwordError}</div>}
         </div>
-        {error && <div style={{ color: "red" }}>{error}</div>}
-        <button type="submit">Signup</button>
+        {error && <div className="text-red-500">{error}</div>}
+        <button type="submit" className="btn btn-success my-5">
+          Signup
+        </button>
       </form>
       <p>
-        Already a user? <Link to="/login">Login</Link>
+        Already a user?{" "}
+        <button onClick={() => navigate("/login")} className="btn btn-ghost">
+          Login
+        </button>
       </p>
     </div>
   );

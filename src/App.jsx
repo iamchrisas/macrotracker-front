@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import './index.css';
+
 
 // Import all page components
 import HomePage from "./pages/HomePage";
@@ -16,7 +18,7 @@ import AddReviewPage from "./pages/AddReviewPage";
 
 function App() {
   return (
-    <div className="app">
+    <div className="app-container">
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />

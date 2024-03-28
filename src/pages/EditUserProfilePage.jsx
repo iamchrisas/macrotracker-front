@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import userService from "../services/user.service";
 import { useNavigate } from "react-router-dom";
 
-
 function EditUserProfilePage() {
   const [formData, setFormData] = useState({
     currentWeight: "",
@@ -13,7 +12,6 @@ function EditUserProfilePage() {
     dailyFatGoal: "",
   });
   const navigate = useNavigate();
-
 
   useEffect(() => {
     userService
@@ -27,7 +25,6 @@ function EditUserProfilePage() {
       });
   }, []);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -36,7 +33,6 @@ function EditUserProfilePage() {
     }));
   };
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     userService
@@ -58,76 +54,89 @@ function EditUserProfilePage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: "50px",
       }}
     >
-      <h2>Profile</h2>
+      <div style={{ height: "20px" }}></div>{" "}
+      {/* This div creates a gap between sections */}
+      <h2 className="text-center">Metrics</h2>
       <form
         onSubmit={handleSubmit}
-        style={{ width: "100%", maxWidth: "500px" }}
+        className="w-full max-w-md"
+        encType="multipart/form-data"
       >
-        {" "}
-        <div style={{ marginBottom: "20px" }}>
-          <label>Current Weight (kg):</label>
-          <input
-            type="number"
-            name="currentWeight"
-            value={formData.currentWeight}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Current Weight (kg)
+            <input
+              type="number"
+              name="currentWeight"
+              value={formData.currentWeight}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Weight Goal (kg):</label>
-          <input
-            type="number"
-            name="weightGoal"
-            value={formData.weightGoal}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Weight Goal (kg)
+            <input
+              type="number"
+              name="weightGoal"
+              value={formData.weightGoal}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Daily Calorie Goal (kcal):</label>
-          <input
-            type="number"
-            name="dailyCalorieGoal"
-            value={formData.dailyCalorieGoal}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Daily Calorie Goal (kcal)
+            <input
+              type="number"
+              name="dailyCalorieGoal"
+              value={formData.dailyCalorieGoal}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Daily Protein Goal (g):</label>
-          <input
-            type="number"
-            name="dailyProteinGoal"
-            value={formData.dailyProteinGoal}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Daily Protein Goal (g)
+            <input
+              type="number"
+              name="dailyProteinGoal"
+              value={formData.dailyProteinGoal}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Daily Carb Goal (g):</label>
-          <input
-            type="number"
-            name="dailyCarbGoal"
-            value={formData.dailyCarbGoal}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Daily Carb Goal (g)
+            <input
+              type="number"
+              name="dailyCarbGoal"
+              value={formData.dailyCarbGoal}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Daily Fat Goal (g):</label>
-          <input
-            type="number"
-            name="dailyFatGoal"
-            value={formData.dailyFatGoal}
-            onChange={handleChange}
-          />
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Daily Fat Goal (g)
+            <input
+              type="number"
+              name="dailyFatGoal"
+              value={formData.dailyFatGoal}
+              onChange={handleChange}
+            />
+          </label>
         </div>
-        <button type="submit" style={{ marginTop: "20px" }}>
-          Update Profile
+        <button type="submit" className="btn btn-success my-5">
+          Save
         </button>
       </form>
       <button
         onClick={() => navigate("/user-profile")}
-        style={{ marginTop: "10px" }}
+        className="btn btn-ghost my-2"
       >
         Go back
       </button>

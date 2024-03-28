@@ -3,13 +3,23 @@ import { useNavigate } from "react-router-dom";
 import foodService from "../services/food.service";
 
 function AddFoodItemPage() {
-  const [foodItem, setFoodItem] = useState({
-    name: "",
-    protein: 0,
-    carbs: 0,
-    fat: 0,
-    date: new Date().toISOString().slice(0, 16), // Slices the ISO string to the 'YYYY-MM-DDTHH:MM' format
+  const [foodItem, setFoodItem] = useState(() => {
+    const now = new Date();
+    const localISOTime = new Date(
+      now.getTime() - now.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .slice(0, 16);
+    return {
+      name: "",
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      date: localISOTime, // Adjusted to local time
+    };
   });
+
+  
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
     protein: "",
@@ -83,85 +93,102 @@ function AddFoodItemPage() {
         justifyContent: "center",
       }}
     >
+      <div style={{ height: "20px" }}></div>{" "}
+      {/* This div creates a gap between sections */}
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
         style={{ width: "100%", maxWidth: "500px" }}
       >
         <h3 style={{ textAlign: "center" }}>Log Meal</h3>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Name:</label>
+        <div style={{ height: "20px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
+        <label className="input input-bordered flex items-center gap-2">
+          Meal Name
           <input
             type="text"
+            className="grow"
             name="name"
             value={foodItem.name}
             onChange={handleChange}
             required
+            placeholder=""
           />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Protein (g):</label>
+        </label>
+        <label className="input input-bordered flex items-center gap-2">
+          Protein (g)
           <input
             type="number"
             name="protein"
             value={foodItem.protein}
             onChange={handleChange}
+            placeholder="0"
           />
-          {validationMsg.protein && (
-            <div style={{ color: "red" }}>{validationMsg.protein}</div>
-          )}
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Carbs (g):</label>
+        </label>
+        {validationMsg.protein && (
+          <div style={{ color: "red" }}>{validationMsg.protein}</div>
+        )}
+        <label className="input input-bordered flex items-center gap-2">
+          Carbs (g)
           <input
             type="number"
             name="carbs"
             value={foodItem.carbs}
             onChange={handleChange}
+            placeholder="0"
           />
-          {validationMsg.carbs && (
-            <div style={{ color: "red" }}>{validationMsg.carbs}</div>
-          )}
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Fat (g):</label>
+        </label>
+        {validationMsg.carbs && (
+          <div style={{ color: "red" }}>{validationMsg.carbs}</div>
+        )}
+        <label className="input input-bordered flex items-center gap-2">
+          Fat (g)
           <input
             type="number"
             name="fat"
             value={foodItem.fat}
             onChange={handleChange}
+            placeholder="0"
           />
-          {validationMsg.fat && (
-            <div style={{ color: "red" }}>{validationMsg.fat}</div>
-          )}
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label>Calories:</label>
-          <span>{calculateCalories()}</span>
-        </div>
-        <div>
+        </label>
+        {validationMsg.fat && (
+          <div style={{ color: "red" }}>{validationMsg.fat}</div>
+        )}
+        <div style={{ height: "20px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
+        <label>Calories: </label>
+        <span>{calculateCalories()}</span>
+        <div style={{ height: "20px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
+        <label className="input input-bordered flex items-center gap-2">
+          Date
           <input
             type="datetime-local"
             name="date"
             value={foodItem.date}
             onChange={handleChange}
           />
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <label htmlFor="image">Image:</label>
+        </label>
+        <div style={{ height: "20px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
+        <label
+          htmlFor="image"
+          className="input input-bordered flex items-center gap-2"
+        >
+          Photo
           <input
             id="image"
             type="file"
+            className="file-input file-input-bordered file-input-sm w-full max-w-xs"
             onChange={handleFileChange}
             accept="image/*"
           />
-        </div>
-        <button type="submit" style={{ marginTop: "20px" }}>
+        </label>
+        <div style={{ height: "30px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
+        <button className="btn btn-success" type="submit">
           Save
         </button>
-        <div style={{ marginTop: "10px" }}>
-          <button onClick={() => navigate(-1)}>Go back</button>
-        </div>
       </form>
     </div>
   );

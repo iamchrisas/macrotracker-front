@@ -24,12 +24,24 @@ function FoodItemsPage() {
   };
 
   const goToPreviousDay = () =>
-    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 1)));
+    setCurrentDate(
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - 1
+      )
+    );
 
   const goToToday = () => setCurrentDate(new Date());
 
   const goToNextDay = () =>
-    setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 1)));
+    setCurrentDate(
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 1
+      )
+    );
 
   const filteredItems = foodItems.filter(
     (item) => new Date(item.date).toDateString() === currentDate.toDateString()
@@ -79,11 +91,21 @@ function FoodItemsPage() {
     };
   }, [currentDate]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "10vh" }}
+      >
+        <span className="loading loading-ring loading-md"></span>
+      </div>
+    );
+
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
+      <div style={{ height: "20px" }}></div>{" "}
+      {/* This div creates a gap between sections */}
       <div
         style={{
           display: "flex",
@@ -91,94 +113,199 @@ function FoodItemsPage() {
           alignItems: "center",
         }}
       >
-        <h2>{formatDate(currentDate)}</h2>
-        <div style={{ display: "flex", gap: "15px" }}>
-          {" "}
-          <button onClick={goToPreviousDay}>Previous day</button>
-          <button onClick={goToToday}>Today</button>
-          <button onClick={goToNextDay}>Next day</button>
-          <Link to="/add-food">
-            <button>Log meal</button>
-          </Link>
+        <div className="grid h-10 card bg-base-300 rounded-box place-items-center">
+          <div style={{ display: "flex", gap: "50px" }}>
+            <button onClick={goToPreviousDay}>
+              {" "}
+              <kbd className="kbd">◀︎</kbd>{" "}
+            </button>
+            <button onClick={goToToday} style={{ textAlign: "center" }}>
+              {formatDate(currentDate)}
+            </button>
+            <button onClick={goToNextDay}>
+              <kbd className="kbd">▶︎</kbd>
+            </button>
+          </div>
         </div>
       </div>
       {/* STATS */}
       {dailyStats && (
-        <div style={{ display: "flex", textAlign: "center", gap: "0px" }}>
-          <p>
-            Calories: {dailyStats.totals.calories} / {dailyStats.goals.calories}{" "}
-            (Remaining: {dailyStats.remaining.calories}) 🔥
-          </p>
-          <p>
-            Protein: {dailyStats.totals.protein} / {dailyStats.goals.protein}{" "}
-            (Remaining: {dailyStats.remaining.protein}) P
-          </p>
-          <p>
-            Carbs: {dailyStats.totals.carbs} / {dailyStats.goals.carbs}{" "}
-            (Remaining: {dailyStats.remaining.carbs}) C
-          </p>
-          <p>
-            Fat: {dailyStats.totals.fat} / {dailyStats.goals.fat} (Remaining:{" "}
-            {dailyStats.remaining.fat}) F
-          </p>
+        <div
+          className="stats shadow p-2 sm:p-4 mx-auto"
+          style={{
+            maxWidth: "500px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
+            <div className="w-full">
+              <div className="stat-title text-xs sm:text-sm">Calories</div>
+              <div className="flex flex-col">
+                <div className="stat-value text-xs sm:text-base">
+                  {dailyStats.totals.calories} / {dailyStats.goals.calories}
+                </div>
+                <div className="stat-desc text-xs sm:text-sm">
+                  {dailyStats.remaining.calories}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
+            <div className="w-full">
+              <div className="stat-title text-xs sm:text-sm">Protein</div>
+              <div className="flex flex-col">
+                <div className="stat-value text-xs sm:text-base">
+                  {dailyStats.totals.protein} / {dailyStats.goals.protein}
+                </div>
+                <div className="stat-desc text-xs sm:text-sm">
+                  {dailyStats.remaining.protein}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
+            <div className="w-full">
+              <div className="stat-title text-xs sm:text-sm">Carbs</div>
+              <div className="flex flex-col">
+                <div className="stat-value text-xs sm:text-base">
+                  {dailyStats.totals.carbs} / {dailyStats.goals.carbs}
+                </div>
+                <div className="stat-desc text-xs sm:text-sm">
+                  {dailyStats.remaining.carbs}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
+            <div className="w-full">
+              <div className="stat-title text-xs sm:text-sm">Fat</div>
+              <div className="flex flex-col">
+                <div className="stat-value text-xs sm:text-base">
+                  {dailyStats.totals.fat} / {dailyStats.goals.fat}
+                </div>
+                <div className="stat-desc text-xs sm:text-sm">
+                  {dailyStats.remaining.fat}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
+      {/* STATS */}
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <ul style={{ listStyle: "none", padding: 10 }}>
+        <ul style={{ listStyle: "none", padding: "10px" }}>
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
               <li
                 key={item._id}
-                style={{ textAlign: "center", marginBottom: "20px" }}
+                className="card w-96 glass bg-neutral shadow-xl"
+                style={{ marginBottom: "50px" }}
               >
-                {" "}
-                {/* Adjusted line */}
                 <div
+                  className="card-body"
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    justifyContent: "center",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    height: "100%",
                   }}
                 >
-                  <h3 style={{ margin: 0 }}>{item.name}</h3>
-                  <p style={{ margin: 0 }}>
-                    {new Date(item.date).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                  }}
-                >
-                  <span>{item.calories} 🔥</span>
-                  <span>{item.protein} P</span>
-                  <span>{item.carbs} C</span>
-                  <span>{item.fat} F</span>
-                </div>
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.name}
+                  <div
                     style={{
-                      maxWidth: "300px",
-                      maxHeight: "300px",
-                      marginTop: "15px",
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
                     }}
-                  />
-                )}
-                {/* BUTTONS */}
-                <button style={{ marginLeft: "10px" }}>
-                  <Link to={`/foods/${item._id}`}>Details</Link>
-                </button>
-                <button style={{ marginLeft: "10px" }}>
-                  <Link to={`/foods/edit-food/${item._id}`}>Edit</Link>
-                </button>
+                  >
+                    <p
+                      className="badge badge-ghost"
+                      style={{
+                        marginBottom: "10px",
+                        whiteSpace: "nowrap",
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      {new Date(item.date).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                    <p
+                      className="card-title"
+                      style={{
+                        fontSize: "16px",
+                        textAlign: "center",
+                        width: "100%",
+                      }}
+                    >
+                      {item.name}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      fontSize: "18px",
+                      textAlign: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <span>{item.calories} 🔥</span>
+                    <span>{item.protein} P</span>
+                    <span>{item.carbs} C</span>
+                    <span>{item.fat} F</span>
+                  </div>
+                  {item.image && (
+                    <figure style={{ display: "flex", marginBottom: "10px" }}>
+                      <img src={item.image} alt={item.name} />
+                    </figure>
+                  )}
+                  <div className="flex justify-end space-x-2">
+                    <Link
+                      className="badge badge-info gap-1"
+                      to={`/foods/${item._id}`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className="inline-block w-4 h-4 stroke-current"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                      info{" "}
+                    </Link>
+                    <Link
+                      className="badge badge-warning gap-1"
+                      to={`/foods/edit-food/${item._id}`}
+                    >
+                      {" "}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className="inline-block w-4 h-4 stroke-current"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                      edit{" "}
+                    </Link>
+                  </div>
+                </div>
               </li>
             ))
           ) : (

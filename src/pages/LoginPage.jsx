@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import authService from "../services/auth.service";
 import { AuthContext } from "../context/auth.context";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState(""); // State to hold login error
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const handleChange = (e) => {
@@ -21,34 +22,51 @@ function Login() {
       })
       .catch((err) => {
         console.error("Login Error:", err);
-        setError("Failed to login. Please check your email and password."); // Provide user feedback
+        setError("Failed to login. Please check your email and password.");
       });
   };
 
   return (
-    <div>
-      <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
+    <div className="flex flex-col items-center justify-center my-5">
+      <h3 className="text-center">Login</h3>
+      <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Email:
+            <input
+              type="email"
+              name="email"
+              placeholder="e.g. john@domain.com"
+              onChange={handleChange}
+              required
+            />
+          </label>
+        </div>
+        <div className="my-5">
+          <label className="input input-bordered flex items-center gap-2">
+            Password:
+            <input
+              type="password"
+              name="password"
+              placeholder="********"
+              onChange={handleChange}
+              required
+            />
+          </label>
+        </div>
+        {error && <div className="text-red-500">{error}</div>}
+        <button type="submit" className="btn btn-success my-5">
+          Login
+        </button>
       </form>
       <p>
-        Not a user - <Link to={"/signup"}>SignUp</Link>
+        Not a user?{" "}
+        <button onClick={() => navigate("/signup")} className="btn btn-ghost">
+          Signup
+        </button>
       </p>
     </div>
   );
 }
+
 export default Login;

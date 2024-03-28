@@ -34,7 +34,7 @@ function FoodItemDetailsPage() {
     try {
       await foodService.deleteFoodItem(id);
       alert("Food item deleted successfully!");
-      navigate("/foods"); // Assuming '/foods' is the path to the list of food items
+      navigate("/foods");
     } catch (error) {
       console.error("Failed to delete food item", error);
       alert("Failed to delete food item.");
@@ -52,68 +52,97 @@ function FoodItemDetailsPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "10vh" }}
+      >
+        <span className="loading loading-ring loading-md"></span>
+      </div>
+    );
+
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h2>{foodItem?.name}</h2>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            width: "100%",
-            marginTop: "15px",
-          }}
-        >
-          <span>{foodItem?.calories} 🔥</span>
-          <span>{foodItem?.protein} P</span>
-          <span>{foodItem?.carbs} C</span>
-          <span>{foodItem?.fat} F</span>
+    <div className="flex flex-col items-center justify-center my-5">
+      <div className="card w-96 glass bg-neutral shadow-xl mb-5">
+        <div className="card-body">
+          <h2 className="card-title text-center">{foodItem?.name}</h2>
+
+          {/* Macronutrients section moved up */}
+          <div className="flex justify-around text-lg my-3">
+            <span>{foodItem?.calories} 🔥</span>
+            <span>{foodItem?.protein} P</span>
+            <span>{foodItem?.carbs} C</span>
+            <span>{foodItem?.fat} F</span>
+          </div>
+
+          {/* Image section moved below macronutrients */}
+          <div className="flex justify-center my-3">
+            {foodItem?.image && (
+              <img
+                src={foodItem.image}
+                alt={foodItem.name}
+                className="max-w-xs max-h-xs"
+              />
+            )}
+          </div>
+
+          <div className="flex justify-center space-x-8 my-3">
+            <button
+              onClick={() => navigate(-1)}
+              className="btn btn-neutral px-4 py-2"
+            >
+              Go back
+            </button>
+            <button
+              onClick={handleReviewButtonClick}
+              className="btn btn-primary px-4 py-2"
+            >
+              Rate
+            </button>
+            <button
+              onClick={handleDeleteFoodItem}
+              className="btn btn-error px-4 py-2"
+            >
+              Delete
+            </button>
+          </div>
+          {selectedFoodItemForReview && (
+            <AddReviewPage
+              foodItemId={selectedFoodItemForReview}
+              onClose={() => setSelectedFoodItemForReview(null)}
+            />
+          )}
         </div>
-        {foodItem?.image && (
-          <img
-            src={foodItem.image}
-            alt={foodItem.name}
-            style={{ maxWidth: "300px", maxHeight: "300px", marginTop: "15px" }}
-          />
-        )}
       </div>
-      <button onClick={() => navigate(-1)}>Go back</button>
-      <button onClick={handleReviewButtonClick}>Rate it</button>
-      <button
-        onClick={handleDeleteFoodItem}
-        style={{ backgroundColor: "red", color: "white" }}
-      >
-        Delete Meal
-      </button>
-      {selectedFoodItemForReview && (
-        <AddReviewPage
-          foodItemId={selectedFoodItemForReview}
-          onClose={() => setSelectedFoodItemForReview(null)}
-        />
-      )}
-      <div>
-        <h3>Reviews</h3>
+      <div className="w-96">
+        <h3 className="text-center font-bold my-4">Reviews</h3>
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id}>
-              <p>Taste: {review.taste}</p>
-              <p>Digestion: {review.digestion}</p>
-              <p>Rate: {review.rate}</p>
-              <button onClick={() => handleDelete(review._id)}>Delete Review</button>
+            <div key={review._id} className="mb-4">
+              {" "}
+              {/* Use review._id here */}
+              <p className="font-semibold mb-1">
+                Taste: <span className="font-normal">{review.taste}</span>
+              </p>
+              <p className="font-semibold mb-1">
+                Digestion:{" "}
+                <span className="font-normal">{review.digestion}</span>
+              </p>
+              <p className="font-semibold mb-4">
+                Rate: <span className="font-normal">{review.rate}</span>
+              </p>
+              <button
+                onClick={() => handleDelete(review._id)}
+                className="btn btn-error btn-xs"
+              >
+                Delete
+              </button>
             </div>
           ))
         ) : (
-          <p>No reviews yet.</p>
+          <p className="text-center">No reviews yet.</p>
         )}
       </div>
     </div>

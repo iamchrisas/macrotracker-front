@@ -48,26 +48,32 @@ function AddReviewPage({ foodItemId, onClose }) {
     ));
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add Review</h2>
-      <div>
-        <label>Taste:</label>
+    <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
+      <h2 className="text-2xl font-bold mb-4">Add Review</h2>
+      <div className="mb-4">
+        <label className="label">
+          <span className="label-text">Taste:</span>
+        </label>
         {renderRadioOptions("taste", [
           { value: "bad", label: "Bad" },
           { value: "ok", label: "Ok" },
           { value: "great", label: "Great" },
         ])}
       </div>
-      <div>
-        <label>Digestion:</label>
+      <div className="mb-4">
+        <label className="label">
+          <span className="label-text">Digestion:</span>
+        </label>
         {renderRadioOptions("digestion", [
           { value: "bad", label: "Bad" },
           { value: "ok", label: "Ok" },
           { value: "great", label: "Great" },
         ])}
       </div>
-      <div>
-        <label>Rate (1-5):</label>
+      <div className="mb-4">
+        <label className="label">
+          <span className="label-text">Rate (1-5):</span>
+        </label>
         <input
           type="number"
           name="rate"
@@ -76,9 +82,12 @@ function AddReviewPage({ foodItemId, onClose }) {
           required
           min="1"
           max="5"
+          className="input input-bordered w-full max-w-xs"
         />
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit" className="btn btn-primary">
+        Submit
+      </button>
     </form>
   );
 }
