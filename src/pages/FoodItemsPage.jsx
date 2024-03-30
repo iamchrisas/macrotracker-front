@@ -44,9 +44,12 @@ function FoodItemsPage() {
       )
     );
 
-  const filteredItems = foodItems.filter(
-    (item) => new Date(item.date).toDateString() === currentDate.toDateString()
-  );
+  const filteredItems = foodItems
+    .filter(
+      (item) =>
+        new Date(item.date).toDateString() === currentDate.toDateString()
+    )
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   async function fetchDailyStats(date) {
     try {
