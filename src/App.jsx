@@ -1,7 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import './index.css';
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import "./index.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Import all page components
 import HomePage from "./pages/HomePage";
@@ -27,18 +32,70 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* User profile and stats routes */}
-        <Route path="/user-profile" element={<UserProfilePage />} />
-        <Route path="/edit-profile" element={<EditUserProfilePage />} />
+        {/* User profile routes */}
+        <Route
+          path="/user-profile"
+          element={
+            <ProtectedRoute>
+              <UserProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditUserProfilePage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Food-related routes */}
-        <Route path="/foods" element={<FoodItemsPage />} />
-        <Route path="/add-food" element={<AddFoodItemPage />} />
-        <Route path="/foods/:id" element={<FoodItemDetailsPage />} />
-        <Route path="/foods/edit-food/:id" element={<EditFoodItemPage />} />
+        <Route
+          path="/foods"
+          element={
+            <ProtectedRoute>
+              <FoodItemsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-food"
+          element={
+            <ProtectedRoute>
+              <AddFoodItemPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/foods/:id"
+          element={
+            <ProtectedRoute>
+              <FoodItemDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/foods/edit-food/:id"
+          element={
+            <ProtectedRoute>
+              <EditFoodItemPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Review-related routes */}
-        <Route path="/add-review" element={<AddReviewPage />} />
+        <Route
+          path="/add-review"
+          element={
+            <ProtectedRoute>
+              <AddReviewPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all route for undefined paths */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
