@@ -15,11 +15,12 @@ function HomePage() {
                 <li>You're not alone.</li>
                 <li>Sticking to a diet often brings anxiety and guilt.</li>
                 <li>
-                  I created this app to eliminate this problem, bridging the gap
-                  between your goals and actions, worry-free.
+                  Close the gap between your goals and your habits, stress-free.
                 </li>
               </ul>
-              <p style={{ marginTop: "80px" }}>Made by Chris</p>
+              <p style={{ display:"flex" ,marginTop: "80px", justifyContent: "center" }}>
+                Made by Chrisas
+              </p>
             </section>
           </main>
         </div>
