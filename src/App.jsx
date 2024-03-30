@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "./context/auth.context";
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,6 +23,17 @@ import EditFoodItemPage from "./pages/EditFoodItemPage";
 import AddReviewPage from "./pages/AddReviewPage";
 
 function App() {
+  const { isLoading } = useContext(AuthContext);
+
+  if (isLoading)
+    return (
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "10vh" }}
+      >
+        <span className="loading loading-ring loading-md"></span>
+      </div>
+    );
+
   return (
     <div className="app-container">
       <Navbar />
