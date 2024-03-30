@@ -49,30 +49,33 @@ function AddReviewPage({ foodItemId, onClose }) {
 
   return (
     <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
-      <h2 className="text-2xl font-bold mb-4">Add Review</h2>
       <div className="mb-4">
-        <label className="label">
-          <span className="label-text">Taste:</span>
+        <label className="block text-sm font-medium text-default mb-1">
+          Taste
         </label>
-        {renderRadioOptions("taste", [
-          { value: "bad", label: "Bad" },
-          { value: "ok", label: "Ok" },
-          { value: "great", label: "Great" },
-        ])}
+        <div className="flex space-x-4 text-sm">
+          {renderRadioOptions("taste", [
+            { value: "bad", label: "Bad" },
+            { value: "ok", label: "Ok" },
+            { value: "great", label: "Great" },
+          ])}
+        </div>
       </div>
-      <div className="mb-4">
-        <label className="label">
-          <span className="label-text">Digestion:</span>
+      <div>
+        <label className="block text-sm font-medium text-default mb-1">
+          Digestion
         </label>
-        {renderRadioOptions("digestion", [
-          { value: "bad", label: "Bad" },
-          { value: "ok", label: "Ok" },
-          { value: "great", label: "Great" },
-        ])}
+        <div className="flex space-x-4 text-sm mb-4">
+          {renderRadioOptions("digestion", [
+            { value: "bad", label: "Bad" },
+            { value: "ok", label: "Ok" },
+            { value: "great", label: "Great" },
+          ])}
+        </div>
       </div>
-      <div className="mb-4">
-        <label className="label">
-          <span className="label-text">Rate (1-5):</span>
+      <div>
+        <label className="block text-sm font-medium text-default mb-1">
+          Rate (1-5)
         </label>
         <input
           type="number"
@@ -82,10 +85,10 @@ function AddReviewPage({ foodItemId, onClose }) {
           required
           min="1"
           max="5"
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered w-full"
         />
       </div>
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-primary mt-4">
         Submit
       </button>
     </form>

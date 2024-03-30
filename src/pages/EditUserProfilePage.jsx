@@ -49,6 +49,7 @@ function EditUserProfilePage() {
 
   return (
     <div
+    className="glass-effect"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -130,13 +131,13 @@ function EditUserProfilePage() {
             />
           </label>
         </div>
-        <button type="submit" className="btn btn-success my-5">
+        <button type="submit" className="btn btn-primary w-full my-5">
           Save
         </button>
       </form>
       <button
         onClick={() => navigate("/user-profile")}
-        className="btn btn-ghost my-2"
+        className="btn btn-ghost my-2 mb-5"
       >
         Go back
       </button>

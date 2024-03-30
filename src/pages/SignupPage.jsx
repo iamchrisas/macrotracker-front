@@ -44,7 +44,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center my-5">
+    <div className="flex flex-col items-center justify-center my-5 glass-effect py-4">
       <h3 className="text-center">Signup</h3>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="my-5">
@@ -88,7 +88,7 @@ function Signup() {
           {passwordError && <div className="text-red-500">{passwordError}</div>}
         </div>
         {error && <div className="text-red-500">{error}</div>}
-        <button type="submit" className="btn btn-success my-5">
+        <button type="submit" className="btn btn-primary w-full my-5">
           Signup
         </button>
       </form>

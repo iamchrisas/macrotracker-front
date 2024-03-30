@@ -19,7 +19,6 @@ function AddFoodItemPage() {
     };
   });
 
-  
   const [file, setFile] = useState(null);
   const [validationMsg, setValidationMsg] = useState({
     protein: "",
@@ -92,6 +91,7 @@ function AddFoodItemPage() {
         alignItems: "center",
         justifyContent: "center",
       }}
+      className="glass-effect"
     >
       <div style={{ height: "20px" }}></div>{" "}
       {/* This div creates a gap between sections */}
@@ -186,9 +186,11 @@ function AddFoodItemPage() {
         </label>
         <div style={{ height: "30px" }}></div>{" "}
         {/* This div creates a gap between sections */}
-        <button className="btn btn-success" type="submit">
+        <button className="btn btn-primary w-full" type="submit">
           Save
         </button>
+        <div style={{ height: "30px" }}></div>{" "}
+        {/* This div creates a gap between sections */}
       </form>
     </div>
   );

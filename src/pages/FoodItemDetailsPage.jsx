@@ -65,11 +65,11 @@ function FoodItemDetailsPage() {
 
   return (
     <div className="flex flex-col items-center justify-center my-5">
-      <div className="card w-96 glass bg-neutral shadow-xl mb-5">
+      <div className="card w-96 shadow-xl mb-5">
         <div className="card-body">
           <h2 className="card-title text-center">{foodItem?.name}</h2>
 
-          {/* Macronutrients section moved up */}
+          {/* Macronutrients section  */}
           <div className="flex justify-around text-lg my-3">
             <span>{foodItem?.calories} 🔥</span>
             <span>{foodItem?.protein} P</span>
@@ -77,8 +77,8 @@ function FoodItemDetailsPage() {
             <span>{foodItem?.fat} F</span>
           </div>
 
-          {/* Image section moved below macronutrients */}
-          <div className="flex justify-center my-3">
+          {/* Image section */}
+          <div className="flex justify-center">
             {foodItem?.image && (
               <img
                 src={foodItem.image}
@@ -91,19 +91,19 @@ function FoodItemDetailsPage() {
           <div className="flex justify-center space-x-8 my-3">
             <button
               onClick={() => navigate(-1)}
-              className="btn btn-neutral px-4 py-2"
+              className="btn btn-sm"
             >
               Go back
             </button>
             <button
               onClick={handleReviewButtonClick}
-              className="btn btn-primary px-4 py-2"
+              className="btn btn-primary btn-sm"
             >
-              Rate
+              Review
             </button>
             <button
               onClick={handleDeleteFoodItem}
-              className="btn btn-error px-4 py-2"
+              className="btn btn-error btn-sm"
             >
               Delete
             </button>

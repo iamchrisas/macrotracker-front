@@ -1,51 +1,127 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 
 function Navbar() {
-  const { isLoggedIn, logOutUser, user } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
+  // Initialize theme state with 'light' as default
+  const [theme, setTheme] = useState("light");
+
+  // On component mount, check for a saved theme in local storage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
+
+  // Function to toggle between 'light' and 'dark' themes
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
 
   return (
     <div
-      className="navbar bg-neutral text-neutral-content"
-      style={{ padding: "10px" }}
+      className={`navbar bg-base-100 flex justify-between ${
+        theme === "dark" ? "glass-effect-navdark" : "glass-effect-navlight"
+      }  navbar-spacing`}
     >
-      <div className="flex-1">
-        <NavLink to="/" className="btn btn-ghost text-xl">
-          Home
+      <div className="navbar-start">
+        <div className="dropdown" style={{ position: "relative" }}>
+          <label tabIndex={0} className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </label>
+          <ul
+            tabIndex={0}
+            className={`menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 ${
+              theme === "dark"
+                ? "glass-effect-navdark"
+                : "glass-effect-navlight"
+            }`}
+            style={{ position: "absolute", zIndex: 9999, top: "100%" }}
+          >
+            <li>
+              <NavLink to="/">Home</NavLink>
+            </li>
+            {isLoggedIn ? (
+              <>
+                <li>
+                  <NavLink to="/user-profile">Profile</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/foods">Meals</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/add-food">Log meal</NavLink>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <NavLink to="/signup">Signup</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/login">Login</NavLink>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+        <NavLink to="/" className="btn btn-ghost text-sm">
+          Macrotracker
         </NavLink>
       </div>
-      <div className="flex-none">
-        {isLoggedIn ? (
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <NavLink to="/user-profile">Profile</NavLink>
-            </li>
-            <li>
-              <NavLink to="/foods">Meals</NavLink>
-            </li>
-            <li>
-              <NavLink to="/add-food">Log meal</NavLink>
-            </li>
-            <li>
-              <NavLink to="/" onClick={logOutUser}>
-                Logout
-              </NavLink>
-            </li>
+      <div className="navbar-center hidden lg:flex">
+        <div className="ml-auto mr-4">
+          <ul className="menu menu-horizontal p-0">
+            {isLoggedIn ? (
+              <>
+                <li>
+                  <NavLink to="/user-profile">Profile</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/foods">Meals</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/add-food">Log meal</NavLink>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <NavLink to="/signup">Signup</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/login">Login</NavLink>
+                </li>
+              </>
+            )}
           </ul>
-        ) : (
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <NavLink to="/signup">Signup</NavLink>
-            </li>
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-          </ul>
-        )}
+        </div>
+      </div>
+      <div className="navbar-end">
         {/* Theme Toggle Component */}
         <label className="swap swap-rotate">
-          <input type="checkbox" value="winter" className=" theme-controller" />
+          <input
+            type="checkbox"
+            onChange={toggleTheme}
+            checked={theme === "dark"}
+          />
           <svg
             className="swap-on fill-current w-7 h-7"
             xmlns="http://www.w3.org/2000/svg"

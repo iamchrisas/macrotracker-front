@@ -27,10 +27,18 @@ function EditFoodItemPage() {
     foodService
       .getFoodItem(id)
       .then((response) => {
+        // Convert server date to local timezone
+        const serverDate = new Date(response.data.foodItem.date);
+        const localISOTime = new Date(
+          serverDate.getTime() - serverDate.getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .slice(0, 16);
+
         setFoodItem({
           ...response.data.foodItem,
           calories: calculateCalories(response.data.foodItem),
-          date: response.data.foodItem.date.slice(0, 16),
+          date: localISOTime, // Use adjusted local time
         });
         setLoading(false);
       })
@@ -121,6 +129,7 @@ function EditFoodItemPage() {
 
   return (
     <div
+    className="glass-effect"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -197,7 +206,7 @@ function EditFoodItemPage() {
           <input
             type="datetime-local"
             name="date"
-            value={foodItem.date.slice(0, 16)}
+            value={foodItem.date}
             onChange={handleChange}
           />
         </label>
@@ -218,11 +227,11 @@ function EditFoodItemPage() {
         </label>
         <div style={{ height: "30px" }}></div>{" "}
         {/* This div creates a gap between sections */}
-        <button className="btn btn-success" type="submit">
+        <button className="btn btn-primary w-full mb-4" type="submit">
           Save
         </button>
       </form>
-      <button className="btn btn-ghost" onClick={() => navigate(-1)}>
+      <button className="btn btn-ghost mb-4" onClick={() => navigate(-1)}>
         Go back
       </button>
     </div>

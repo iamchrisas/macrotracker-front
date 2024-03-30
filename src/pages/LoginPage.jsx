@@ -27,7 +27,7 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center my-5">
+    <div className="flex flex-col items-center justify-center my-5 glass-effect py-4">
       <h3 className="text-center">Login</h3>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="my-5">
@@ -55,7 +55,7 @@ function Login() {
           </label>
         </div>
         {error && <div className="text-red-500">{error}</div>}
-        <button type="submit" className="btn btn-success my-5">
+        <button type="submit" className="btn btn-primary w-full my-5">
           Login
         </button>
       </form>

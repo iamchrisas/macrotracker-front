@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import foodService from "../services/food.service";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function FoodItemsPage() {
   const [foodItems, setFoodItems] = useState([]);
@@ -8,6 +8,7 @@ function FoodItemsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const navigate = useNavigate();
 
   const formatDate = (date) => {
     const today = new Date();
@@ -104,8 +105,6 @@ function FoodItemsPage() {
 
   return (
     <div>
-      <div style={{ height: "20px" }}></div>{" "}
-      {/* This div creates a gap between sections */}
       <div
         style={{
           display: "flex",
@@ -128,6 +127,8 @@ function FoodItemsPage() {
           </div>
         </div>
       </div>
+      <div style={{ height: "35px" }}></div>{" "}
+      {/* This div creates a gap between sections */}
       {/* STATS */}
       {dailyStats && (
         <div
@@ -140,12 +141,12 @@ function FoodItemsPage() {
         >
           <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
             <div className="w-full">
-              <div className="stat-title text-xs sm:text-sm">Calories</div>
+              <div className="stat-title mb-1">Calories</div>
               <div className="flex flex-col">
-                <div className="stat-value text-xs sm:text-base">
+                <div className="stat-value text-xs sm:text-base mb-2">
                   {dailyStats.totals.calories} / {dailyStats.goals.calories}
                 </div>
-                <div className="stat-desc text-xs sm:text-sm">
+                <div className="stat-desc badge badge-warning ">
                   {dailyStats.remaining.calories}
                 </div>
               </div>
@@ -154,12 +155,12 @@ function FoodItemsPage() {
 
           <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
             <div className="w-full">
-              <div className="stat-title text-xs sm:text-sm">Protein</div>
+              <div className="stat-title mb-1">Protein</div>
               <div className="flex flex-col">
-                <div className="stat-value text-xs sm:text-base">
+                <div className="stat-value text-xs sm:text-base mb-2">
                   {dailyStats.totals.protein} / {dailyStats.goals.protein}
                 </div>
-                <div className="stat-desc text-xs sm:text-sm">
+                <div className="stat-desc badge badge-error">
                   {dailyStats.remaining.protein}
                 </div>
               </div>
@@ -168,12 +169,12 @@ function FoodItemsPage() {
 
           <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
             <div className="w-full">
-              <div className="stat-title text-xs sm:text-sm">Carbs</div>
+              <div className="stat-title mb-1">Carbs</div>
               <div className="flex flex-col">
-                <div className="stat-value text-xs sm:text-base">
+                <div className="stat-value text-xs sm:text-base mb-2">
                   {dailyStats.totals.carbs} / {dailyStats.goals.carbs}
                 </div>
-                <div className="stat-desc text-xs sm:text-sm">
+                <div className="stat-desc badge badge-info">
                   {dailyStats.remaining.carbs}
                 </div>
               </div>
@@ -182,12 +183,12 @@ function FoodItemsPage() {
 
           <div className="stat flex flex-col gap-1 sm:gap-2 sm:flex-row">
             <div className="w-full">
-              <div className="stat-title text-xs sm:text-sm">Fat</div>
+              <div className="stat-title mb-1">Fat</div>
               <div className="flex flex-col">
-                <div className="stat-value text-xs sm:text-base">
+                <div className="stat-value text-xs sm:text-base mb-2">
                   {dailyStats.totals.fat} / {dailyStats.goals.fat}
                 </div>
-                <div className="stat-desc text-xs sm:text-sm">
+                <div className="stat-desc badge badge-accent">
                   {dailyStats.remaining.fat}
                 </div>
               </div>
@@ -196,13 +197,15 @@ function FoodItemsPage() {
         </div>
       )}
       {/* STATS */}
+      <div style={{ height: "20px" }}></div>{" "}
+      {/* This div creates a gap between sections */}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <ul style={{ listStyle: "none", padding: "10px" }}>
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
               <li
                 key={item._id}
-                className="card w-96 glass bg-neutral shadow-xl"
+                className="card w-96 shadow-xl"
                 style={{ marginBottom: "50px" }}
               >
                 <div
@@ -265,45 +268,18 @@ function FoodItemsPage() {
                     </figure>
                   )}
                   <div className="flex justify-end space-x-2">
-                    <Link
-                      className="badge badge-info gap-1"
-                      to={`/foods/${item._id}`}
+                    <button
+                      className="btn btn-xs gap-1"
+                      onClick={() => navigate(`/foods/${item._id}`)}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className="inline-block w-4 h-4 stroke-current"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                      </svg>
-                      info{" "}
-                    </Link>
-                    <Link
-                      className="badge badge-warning gap-1"
-                      to={`/foods/edit-food/${item._id}`}
+                      info
+                    </button>
+                    <button
+                      className="btn btn-outline btn-xs gap-1"
+                      onClick={() => navigate(`/foods/edit-food/${item._id}`)}
                     >
-                      {" "}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className="inline-block w-4 h-4 stroke-current"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                      </svg>
-                      edit{" "}
-                    </Link>
+                      edit
+                    </button>
                   </div>
                 </div>
               </li>
