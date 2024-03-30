@@ -200,7 +200,7 @@ function FoodItemsPage() {
         </div>
       )}
       {/* STATS */}
-      <div style={{ height: "20px" }}></div>{" "}
+      <div style={{ height: "30px" }}></div>{" "}
       {/* This div creates a gap between sections */}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <ul style={{ listStyle: "none", padding: "10px" }}>
