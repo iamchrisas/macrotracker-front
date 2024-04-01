@@ -50,7 +50,7 @@ function HomePage() {
                   justifyContent: "center",
                 }}
               >
-                Made by Chrisas
+                Made by Chris
               </p>
             </section>
           </main>
