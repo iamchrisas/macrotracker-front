@@ -14,7 +14,7 @@ function HomePage() {
           <main>
             <section className="text-lg space-y-2">
               <ul className="list-disc space-y-1 pl-5">
-                <li>Want to lose weight or gain muscle?</li>
+                <li>Need to lose weight or gain muscle?</li>
                 <li>You don't have to feel anxiety or guilt.</li>
                 <li>
                   Close the gap between your goals and your habits, stress-free.
